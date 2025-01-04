@@ -1,0 +1,287 @@
+          <svg
+            xml:space="preserve"
+            viewBox="0 0 100 100"
+            y="0px"
+            x="0px"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns="http://www.w3.org/2000/svg"
+            id="Layer_1"
+            version="1.1"
+            style="margin: initial; display: block; shape-rendering: auto"
+            preserveAspectRatio="xMidYMid"
+            width="200"
+            height="200"
+          >
+            <g
+              class="ldl-scale"
+              style="
+                transform-origin: 50% 50%;
+                transform: rotate(0deg) scale(0.8, 0.8);
+              "
+            >
+              <g class="ldl-ani">
+                <g class="ldl-layer">
+                  <g class="ldl-ani">
+                    <g>
+                      <g class="ldl-layer">
+                        <g
+                          class="ldl-ani"
+                          style="
+                            opacity: 1;
+                            transform-origin: 50px 50px;
+                            transform: matrix3d(
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            );
+                            animation: 1s linear -0.583333s infinite normal forwards
+                              running animate;
+                            transform-box: view-box;
+                          "
+                        >
+                          <polygon
+                            points="62.7,73.1 50.9,57.5 66.5,45.7"
+                            stroke-miterlimit="10"
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                            stroke-width="4"
+                            stroke="#000000"
+                            fill="#C1272D"
+                            style="stroke-width: 4; fill: rgb(193, 39, 45)"
+                          ></polygon>
+                        </g>
+                      </g>
+
+                      <g class="ldl-layer">
+                        <g
+                          class="ldl-ani"
+                          style="
+                            opacity: 1;
+                            transform-origin: 50px 50px;
+                            transform: matrix3d(
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            );
+                            animation: 1s linear -0.666667s infinite normal forwards
+                              running animate;
+                            transform-box: view-box;
+                          "
+                        >
+                          <polygon
+                            points="25.9,36.3 41.5,48.1 53.3,32.5"
+                            stroke-miterlimit="10"
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                            stroke-width="4"
+                            stroke="#000000"
+                            fill="#C1272D"
+                            style="stroke-width: 4; fill: rgb(193, 39, 45)"
+                          ></polygon>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+                <g class="ldl-layer">
+                  <g
+                    class="ldl-ani"
+                    style="
+                      opacity: 1;
+                      transform-origin: 50px 50px;
+                      transform: matrix3d(
+                        0.91,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.91,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.91,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                      );
+                      animation: 1s linear -0.75s infinite normal forwards running
+                        animate;
+                      transform-box: view-box;
+                    "
+                  >
+                    <polygon
+                      points="43.6,71 28,55.4 44.4,46.6 52.4,54.6"
+                      stroke-miterlimit="10"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                      stroke-width="4"
+                      stroke="#000000"
+                      fill="#F7931E"
+                      style="stroke-width: 4; fill: rgb(247, 147, 30)"
+                    ></polygon>
+                  </g>
+                </g>
+                <g class="ldl-layer">
+                  <g class="ldl-ani">
+                    <g>
+                      <g class="ldl-layer">
+                        <g
+                          class="ldl-ani"
+                          style="
+                            opacity: 1;
+                            transform-origin: 50px 50px;
+                            transform: matrix3d(
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            );
+                            animation: 1s linear -0.833333s infinite normal forwards
+                              running animate;
+                            transform-box: view-box;
+                          "
+                        >
+                          <path
+                            d="M83.8,15.2c0,0-15.1-5.4-26.6,6.1C49.7,28.8,42.6,39.8,40,48.1L50.9,59c8.4-2.5,19.4-9.7,26.8-17.1C89.2,30.4,83.8,15.2,83.8,15.2z"
+                            stroke-miterlimit="10"
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                            stroke-width="4"
+                            stroke="#000000"
+                            fill="#FFFFFF"
+                            style="stroke-width: 4; fill: rgb(255, 255, 255)"
+                          ></path>
+                        </g>
+                      </g>
+
+                      <g class="ldl-layer">
+                        <g
+                          class="ldl-ani"
+                          style="
+                            opacity: 1;
+                            transform-origin: 50px 50px;
+                            transform: matrix3d(
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              0.91,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            );
+                            animation: 1s linear -0.916667s infinite normal forwards
+                              running animate;
+                            transform-box: view-box;
+                          "
+                        >
+                          <circle
+                            r="8.1"
+                            cy="34.1"
+                            cx="64.9"
+                            stroke-miterlimit="10"
+                            stroke-linejoin="round"
+                            stroke-linecap="round"
+                            stroke-width="4"
+                            stroke="#000000"
+                            fill="#29ABE2"
+                            style="stroke-width: 4; fill: rgb(41, 171, 226)"
+                          ></circle>
+                        </g>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+                <g class="ldl-layer">
+                  <g
+                    class="ldl-ani"
+                    style="
+                      opacity: 1;
+                      transform-origin: 50px 50px;
+                      transform: matrix3d(
+                        0.91,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.91,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0.91,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1
+                      );
+                      animation: 1s linear -1s infinite normal forwards running animate;
+                      transform-box: view-box;
+                    "
+                  >
+                    <path
+                      d="M11.1,88.2c0,0,10.6,0.3,19.2-8.3c3.2-3.2,4-11.4,2.9-9.9c-0.5,0.6-0.9,1.2-1.4,1.6c-3.8,3.8-8.2,4.1-8.2,4.1s0.3-4.3,4.1-8.2
+	c0.4-0.4,1-0.9,1.6-1.4c1.5-1.1-6.8-0.3-9.9,2.9C10.8,77.6,11.1,88.2,11.1,88.2z"
+                      stroke-miterlimit="10"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                      stroke-width="4"
+                      stroke="#000000"
+                      fill="#FF0000"
+                      style="stroke-width: 4; fill: rgb(255, 0, 0)"
+                    ></path>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>

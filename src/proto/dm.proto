@@ -1,0 +1,47 @@
+
+syntax = "proto3";
+
+package dm;
+
+enum DmColorfulType {
+    NoneType        = 0;     // 无
+    VipGradualColor = 60001; // 渐变色
+}
+
+enum DmFromType {
+    DmFromUnknown = 0;
+    DmFromNormal = 1;
+    DmFromCmd = 2;
+    DmFromLive = 3;
+}
+
+message DmColorful{
+    DmColorfulType type = 1;
+    string src = 2;
+}
+
+message DanmakuElem {
+    int32 stime = 2;
+    int32 mode = 3;
+    int32 size = 4;
+    uint32 color = 5;
+    string uhash = 6;
+    string text = 7;
+    int64 date = 8;
+    int32 weight = 9;
+    string action = 10;
+    int32 pool = 11;
+    string dmid = 12;
+    int32 attr = 13;
+    string animation = 22;
+    DmColorfulType colorful = 24;
+    int64 oid = 26;
+    DmFromType dmFrom = 27;
+}
+
+
+
+message DmSegMobileReply {
+    repeated DanmakuElem elems=1;
+    repeated DmColorful colorfulSrc=5;
+}
