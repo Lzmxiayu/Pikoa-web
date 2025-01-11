@@ -31,3 +31,5 @@ src-tauri
 *.sln
 *.sw?
 *.tsbuildinfo
+node_modules
+.vite/*

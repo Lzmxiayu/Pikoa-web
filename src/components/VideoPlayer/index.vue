@@ -284,7 +284,9 @@ function bindEvents() {
 function initPlayer() {
   if (videoPlayer.value) {
     videoPlayer.value.destroy()
+    videoPlayer.value = null
   }
+  videoPlayerStore.setPending(true)
   const mpdInfo = getMpdInfo()
   videoPlayer.value = initialize(
     document.querySelector('#videoPlayer'),

@@ -3,7 +3,7 @@
     class="fixed-list-wrap"
     @scroll="handleScrollFn"
     ref="fixedListWrap"
-    :style="{ height: `${containerHeight}` }"
+    :style="{ height: `${containerHeight}px` }"
   >
     <slot name="header"> </slot>
     <slot name="empty"> </slot>
@@ -46,8 +46,8 @@ const props = defineProps({
     default: 10,
   },
   containerHeight: {
-    type: String,
-    default: '100%',
+    type: Number,
+    default: 0,
   },
 })
 
@@ -58,14 +58,13 @@ const showList = ref([])
 function handleScroll(e) {
   //   console.log(fixedListWrap.value.scrollTop)
   //   console.log(fixedListWrap.value.offsetHeight)
-  let start = Math.floor(fixedListWrap.value.scrollTop / props.itemHeight)
-  let end = Math.ceil(
-    (fixedListWrap.value.scrollTop + fixedListWrap.value.offsetHeight) /
-      props.itemHeight,
+  const start = Math.max(
+    Math.floor(fixedListWrap.value.scrollTop / props.itemHeight) -
+      props.hashSize,
+    0,
   )
-
-  start = Math.max(start - props.hashSize, 0)
-  end = end + props.hashSize //Math.max(end + props.hashSize, props.list.length)
+  const end =
+    start + Math.ceil(props.containerHeight / props.itemHeight) + props.hashSize
   //   console.log(start, end)
   showList.value = props.list.slice(start, end)
 }

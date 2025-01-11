@@ -12,8 +12,8 @@
         ref="fixedListEl"
         :list="showList"
         :itemHeight="itemHeight"
-        :hashSize="6"
-        :containerHeight="`${showList.length >= 10 ? '400px' : showList.length * 40 + 'px'}`"
+        :hashSize="10"
+        :containerHeight="showList.length >= 10 ? 400 : showList.length * 40"
       >
         <!-- <template v-slot:empty v-if="showList.length === 0">
           <div class="barrage-list-empty">

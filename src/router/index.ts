@@ -1,11 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// @ts-ignore
 import VideoView from '@/views/VideoView.vue'
-// @ts-ignore
 import SearchView from '@/views/SearchView.vue'
-// @ts-ignore
 import Home from '@/views/Home.vue'
-
 import HistoryPage from '@/views/HistoryPage.vue'
 import SpaceView from '@/views/SpaceView.vue'
 import LoginView from '@/views/LoginView.vue'

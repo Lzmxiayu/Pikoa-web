@@ -8,8 +8,13 @@
         <div class="content">{{ '当前弹幕' }}</div>
         <div class="date">{{ '发送时间' }}</div>
       </div>
-      <div class="barrage-list-fixed">
-        <FixedList :list="showList" :itemHeight="itemHeight" ref="fixedListEl">
+      <div class="barrage-list-fixed" ref="barrageList">
+        <FixedList
+          ref="fixedListEl"
+          :list="showList"
+          :itemHeight="itemHeight"
+          :containerHeight="listHeight"
+        >
           <!-- <template v-slot:header>
           <div class="barrage-list-item">
             <div class="stime">
@@ -57,7 +62,7 @@
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import FixedList from '../common/FixedList.vue'
 import { timestampToDate2, formatTime, rgb888ToRgb } from '@/utils'
 import eventBus from '@/eventBus.ts'
@@ -65,10 +70,15 @@ import eventBus from '@/eventBus.ts'
 const props = defineProps(['barrageInfo'])
 
 const list = ref([])
+const barrageList = ref(null)
 const fixedListEl = ref(null)
 const showList = ref([])
 const itemHeight = ref(40)
 const curTime = ref(0)
+
+const listHeight = computed(() => {
+  return barrageList.value ? barrageList.value.offsetHeight : 0
+})
 
 function updateList({ time }) {
   curTime.value = time
