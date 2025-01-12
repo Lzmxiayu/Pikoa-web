@@ -58,13 +58,10 @@ const showList = ref([])
 function handleScroll(e) {
   //   console.log(fixedListWrap.value.scrollTop)
   //   console.log(fixedListWrap.value.offsetHeight)
-  const start = Math.max(
-    Math.floor(fixedListWrap.value.scrollTop / props.itemHeight) -
-      props.hashSize,
-    0,
-  )
-  const end =
+  let start = Math.floor(fixedListWrap.value.scrollTop / props.itemHeight)
+  let end =
     start + Math.ceil(props.containerHeight / props.itemHeight) + props.hashSize
+  start = Math.max(start - props.hashSize, 0)
   //   console.log(start, end)
   showList.value = props.list.slice(start, end)
 }

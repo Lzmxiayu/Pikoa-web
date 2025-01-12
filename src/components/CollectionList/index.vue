@@ -12,7 +12,7 @@
         ref="fixedListEl"
         :list="showList"
         :itemHeight="itemHeight"
-        :hashSize="10"
+        :hashSize="5"
         :containerHeight="showList.length >= 10 ? 400 : showList.length * 40"
       >
         <!-- <template v-slot:empty v-if="showList.length === 0">
