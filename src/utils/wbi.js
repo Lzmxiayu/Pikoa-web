@@ -43,7 +43,7 @@ function encWbi(params, img_key, sub_key) {
 
 // 获取最新的 img_key 和 sub_key
 async function getWbiKeys() {
-  const res = await fetch('http://localhost:8080/api/nav', {
+  const res = await fetch('http://localhost:8080/api/base/nav', {
     headers: {
       // SESSDATA 字段
       Cookie:

@@ -209,7 +209,7 @@ function getMpdInfo() {
   const baseUri = 'http://localhost:8080/api/'
   const videoConfig = video
     .map((item, index) => ({
-      baseUrl: 'playStream?mimeType=video&track='
+      baseUrl: '/api/video/playStream?mimeType=video&track='
         .concat(index)
         .concat('&timeStamp='.concat(timeStamp)),
       bandwidth: item.bandwidth,
@@ -221,7 +221,7 @@ function getMpdInfo() {
     .filter(el => !el.codecs.includes('hev'))
   const audioConfig = [
     {
-      baseUrl: 'playStream?mimeType=audio&track=0'.concat(
+      baseUrl: '/api/video/playStream?mimeType=audio&track=0'.concat(
         '&timeStamp='.concat(timeStamp),
       ),
       bandwidth: audio[0].bandwidth,

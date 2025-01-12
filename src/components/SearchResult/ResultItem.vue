@@ -90,7 +90,7 @@ function getMpdInfo() {
     .filter(el => !el.codecs.includes('hev'))
     .sort((a, b) => a.id - b.id)
   const videoConfig = leftvideo.slice(0, 1).map((item, index) => ({
-    baseUrl: 'playStream?mimeType=video&track='
+    baseUrl: '/api/video/playStream?mimeType=video&track='
       .concat(index)
       .concat('&timeStamp='.concat(timeStamp)),
     bandwidth: item.bandwidth,
@@ -102,7 +102,7 @@ function getMpdInfo() {
 
   const audioConfig = [
     // {
-    //   baseUrl: 'playStream?mimeType=audio&track=0',
+    //   baseUrl: '/api/video/playStream?mimeType=audio&track=0',
     //   bandwidth: audio[0].bandwidth,
     //   codecs: audio[0].codecs,
     // },
@@ -149,8 +149,8 @@ async function previewVideo() {
     videoPlayer.value.play()
     return
   }
-  await getInfo()
   isPreViewing.value = true
+  await getInfo()
   initPlayer()
 }
 

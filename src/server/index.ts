@@ -10,7 +10,7 @@ export const searchAll = async (params: any) =>
 
 export const getVideoView = async (params: any) =>
   Service({
-    url: '/api/videoView',
+    url: '/api/video/videoView',
     method: 'GET',
     params,
     config: undefined,
@@ -18,7 +18,7 @@ export const getVideoView = async (params: any) =>
 
 export const getPlayList = async (params: any) =>
   Service({
-    url: '/api/playUrl',
+    url: '/api/video/playUrl',
     method: 'GET',
     params,
     config: undefined,
@@ -26,7 +26,7 @@ export const getPlayList = async (params: any) =>
 
 export const downloadFile = async (params?: any) =>
   Service({
-    url: '/api/download',
+    url: '/api/video/download',
     method: 'POST',
     params,
     config: undefined,
@@ -34,7 +34,7 @@ export const downloadFile = async (params?: any) =>
 
 export const getComments = async (params: any) =>
   Service({
-    url: '/api/reply',
+    url: '/api/video/reply',
     method: 'GET',
     params,
     config: undefined,
@@ -42,7 +42,7 @@ export const getComments = async (params: any) =>
 
 export const getRelatedVideos = async (params: any) =>
   Service({
-    url: '/api/related',
+    url: '/api/video/related',
     method: 'GET',
     params,
     config: undefined,
@@ -50,7 +50,7 @@ export const getRelatedVideos = async (params: any) =>
 
 export const getBarrage = async (params: any) =>
   Service({
-    url: '/api/barrage',
+    url: '/api/video/barrage',
     method: 'GET',
     params,
     config: {
@@ -60,7 +60,7 @@ export const getBarrage = async (params: any) =>
 
 export const getVideoshot = async (params: any) =>
   Service({
-    url: '/api/videoshot',
+    url: '/api/video/videoshot',
     method: 'GET',
     params,
     config: undefined,
@@ -68,7 +68,7 @@ export const getVideoshot = async (params: any) =>
 
 export const getFrontRecommendVideos = async (params: any) =>
   Service({
-    url: '/api/front_rmcd_video',
+    url: '/api/base/front_rmcd_video',
     method: 'GET',
     params,
     config: undefined,
@@ -86,6 +86,31 @@ export const getVideoDetail = async (params: any) =>
   Service({
     url: '/api/video/detail',
     method: 'GET',
+    params,
+    config: undefined,
+  })
+
+/** 创作 */
+export const getUploadVideoInfo = async (params: any) =>
+  Service({
+    url: '/api/file/getUploadList',
+    method: 'GET',
+    params,
+    config: undefined,
+  })
+
+export const uploadVideoFile = async (params?: any) =>
+  Service({
+    url: '/api/file/upload',
+    method: 'POST',
+    params,
+    config: undefined,
+  })
+
+export const uploadVideoMerge = async (params?: any) =>
+  Service({
+    url: '/api/file/merge',
+    method: 'POST',
     params,
     config: undefined,
   })
