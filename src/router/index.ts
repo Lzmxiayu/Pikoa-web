@@ -5,6 +5,7 @@ import Home from '@/views/Home.vue'
 import HistoryPage from '@/views/HistoryPage.vue'
 import SpaceView from '@/views/SpaceView.vue'
 import LoginView from '@/views/LoginView.vue'
+import CreateView from '@/views/CreateView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -25,6 +26,11 @@ const router = createRouter({
       name: 'home',
       component: Home,
       // () => import('@/views/SearchView.vue'),
+    },
+    {
+      path: '/create',
+      name: 'create',
+      component: CreateView,
     },
     {
       path: '/history',

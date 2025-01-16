@@ -27,6 +27,7 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '.proto': './src/assets/dm.proto',
+      public: './public',
     },
   },
 })

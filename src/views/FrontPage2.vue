@@ -38,9 +38,9 @@
             <icon-history size="24" />
             历史
           </a-menu-item>
-          <a-menu-item key="upload">
+          <a-menu-item key="create">
             <icon-upload size="24" />
-            投稿
+            创作
           </a-menu-item>
           <a-menu-item key="space">
             <icon-cloud size="24" />

@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 import {
   CaretRightOutlined,
   PauseOutlined,
@@ -178,6 +178,50 @@ const { baseInfo, playConfig } = storeToRefs(videoInfoStore)
 const current_quality = ref('')
 const bitrateSwitching = ref(false)
 const toBitrate = ref('')
+
+// worker线程
+// let videoShotWorker = null
+// onMounted(() => {
+//   videoShotWorker = new Worker('public/worker/videoshot.js')
+//   videoShotWorker.addEventListener('message', e => {
+//     console.timeEnd()
+//     console.log('receive', e.data)
+
+//     const img = document.createElement('img')
+
+//     img.src = URL.createObjectURL(e.data)
+//     img.onload = () => {
+//       document.body.appendChild(img)
+//     }
+//   })
+//   function test() {
+//     const img = new Image()
+//     img.src = '27795328431_csni5b-0001.jpg'
+//     img.crossOrigin = 'anonymous'
+//     img.onload = () => {
+//       // const canvas = document.createElement('canvas')
+//       // canvas.width = img.width
+//       // canvas.height = img.height
+//       // const ctx = canvas.getContext('2d')
+//       // ctx.drawImage(img, 0, 0)
+//       // const offScreenCanvas = canvas.transferControlToOffscreen()
+//       // const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
+//       // console.log('imageData', data)
+//       // videoShotWorker.postMessage(
+//       //   {
+//       //     imageData: data,
+//       //     offScreenCanvas,
+//       //   },
+//       //   [offScreenCanvas],
+//       // )
+//     }
+//   }
+//   test()
+// })
+
+// onUnmounted(() => {
+//   videoShotWorker.terminate()
+// })
 
 /**清晰度 */
 const video_quality = ref([])
@@ -283,6 +327,8 @@ function transToBase64(left) {
   previewImage.value.style.transform = `translateX(${translateX}px)`
   const time = Math.round(props.videoPlayer.duration() * Number(left))
   const count = info.index.findIndex(val => val > time) - 1
+  const x = (count % info.img_x_len) - 1
+  const y = Math.floor(count / info.img_x_len)
   const canvas = document.createElement('canvas')
   canvas.width = perWidth
   canvas.height = perHeight
@@ -290,8 +336,6 @@ function transToBase64(left) {
     previewImage.value.src = videoshotInfo.cache[count].src
     return
   }
-  const x = (count % info.img_x_len) - 1
-  const y = Math.floor(count / info.img_x_len)
   canvas
     .getContext('2d')
     .drawImage(
@@ -332,9 +376,9 @@ function getAndRenderVideoShot(e) {
     transToBase64(left)
     return
   }
-  // initVdeioshotImage(() => {
-  //   transToBase64(left)
-  // })
+  initVdeioshotImage(() => {
+    transToBase64(left)
+  })
 }
 
 function bindEvents() {
