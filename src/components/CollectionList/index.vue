@@ -3,7 +3,7 @@
     <div class="collection-area-header">
       <span class="collection-title">{{ collectionInfo.title }}</span>
       <span class="collection-index">{{
-        ' (' + (index + 1) + '/' + showList.length + ')'
+        ' (' + (curIndex + 1) + '/' + showList.length + ')'
       }}</span>
     </div>
     <div class="collection-area-desc">{{ collectionInfo.intro }}</div>
@@ -11,9 +11,9 @@
       <FixedList
         ref="fixedListEl"
         :list="showList"
-        :itemHeight="itemHeight"
-        :hashSize="5"
-        :containerHeight="showList.length >= 10 ? 400 : showList.length * 40"
+        :item-height="itemHeight"
+        :hash-size="5"
+        :container-height="showList.length >= 10 ? 400 : showList.length * 40"
       >
         <!-- <template v-slot:empty v-if="showList.length === 0">
           <div class="barrage-list-empty">
@@ -27,19 +27,19 @@
             />
           </div>
         </template> -->
-        <template v-slot:single="{ item }">
+        <template #single="{ item }">
           <div
             class="collection-area-list-item"
             :class="{
-              'collectin-selected': index === item.index,
+              'collectin-selected': curIndex === item.index,
             }"
             @click="jumpVideo(item)"
           >
             <PlayingGif
+              v-if="curIndex === item.index"
               :color="'#00aeec'"
               size="12"
               :style="'margin-right: 5px'"
-              v-if="index === item.index"
             />
             <span class="title">{{ item.title }}</span>
             <span class="duration">{{
@@ -52,41 +52,50 @@
   </div>
 </template>
 <script setup>
-import { computed, onMounted, ref, nextTick } from 'vue'
-import FixedList from '@/components/common/FixedList.vue'
-import PlayingGif from '@/components/Icon/PlayingGif.vue'
-import { useVideoInfoStore } from '@/stores/videoInfo'
-import { useVideoPlayerStore } from '@/stores/videoplayer'
+import { computed, onMounted, ref, watch, nextTick } from 'vue';
+import FixedList from '@/components/common/FixedList.vue';
+import PlayingGif from '@/components/Icon/PlayingGif.vue';
+import { useVideoInfoStore } from '@/stores/videoInfo';
+import { useVideoPlayerStore } from '@/stores/videoplayer';
 
-import { formatTime, changeUrlSearchParam } from '@/utils'
+import { formatTime } from '@/utils';
 
-const props = defineProps(['collectionInfo', 'bvid'])
+const props = defineProps(['collectionInfo', 'bvid']);
 
-const fixedListEl = ref(null)
-const itemHeight = ref(40)
-const index = ref(-1)
+const fixedListEl = ref(null);
+const itemHeight = ref(40);
 
 const showList = computed(() => {
   const list =
     props.collectionInfo?.list?.map((item, index) =>
       Object.assign({}, item, { index }),
-    ) || []
-  index.value = list?.findIndex(item => item.bvid === props.bvid)
-  nextTick(() => {
-    fixedListEl.value?.initialScroll(index.value)
-  })
-  return list
-})
+    ) || [];
+  return list;
+});
 
-const videoPlayerStore = useVideoPlayerStore()
-const videoInfoStore = useVideoInfoStore()
+const curIndex = computed(() => {
+  if (showList.value.length === 0) return -1;
+  return showList.value?.findIndex(item => item.bvid === props.bvid);
+});
+
+watch(
+  () => curIndex.value,
+  newVal => {
+    nextTick(() => {
+      fixedListEl.value?.initialScroll(newVal);
+    });
+  },
+);
+
+const videoPlayerStore = useVideoPlayerStore();
+const videoInfoStore = useVideoInfoStore();
 
 function jumpVideo(item) {
-  videoPlayerStore.setAutoPlay(true)
-  videoInfoStore.setBvid(item.bvid)
+  videoPlayerStore.setAutoPlay(true);
+  videoInfoStore.setBvid(item.bvid);
 }
 
-onMounted(() => {})
+onMounted(() => {});
 </script>
 <style lang="less" scoped>
 .collection-area {

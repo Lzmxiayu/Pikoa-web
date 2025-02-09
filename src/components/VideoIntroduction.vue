@@ -21,8 +21,8 @@
   </div>
 </template>
 <script setup>
-import { timestampToDate } from '@/utils/index'
-const props = defineProps(['baseInfo'])
+import { timestampToDate } from '@/utils/index';
+const props = defineProps(['baseInfo']);
 </script>
 
 <style lang="less" scoped>

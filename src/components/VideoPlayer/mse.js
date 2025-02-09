@@ -129,12 +129,12 @@ const createParsedMpd = ({
     autoSwitchBitrate: false,
     baseUri: baseUri, // 可选参数, 前面有的话就不用了
     loadedTime: new Date(),
-  }
-}
+  };
+};
 
 function initialize(videoEl, mpdInfo) {
-  const parsedManifest = createParsedMpd(mpdInfo)
-  const player = window.dashjs.MediaPlayer().create()
+  const parsedManifest = createParsedMpd(mpdInfo);
+  const player = window.dashjs.MediaPlayer().create();
   player.updateSettings({
     streaming: {
       abr: {
@@ -142,14 +142,14 @@ function initialize(videoEl, mpdInfo) {
         autoSwitchBitrate: { audio: true, video: false },
       },
     },
-  })
-  player.initialize(videoEl, null, false)
-  player.attachSource(parsedManifest)
+  });
+  player.initialize(videoEl, null, false);
+  player.attachSource(parsedManifest);
   // player.setQualityFor('video', 0)
   // const controlbar = new ControlBar(player);
   // controlbar.initialize();
   // player.play();
-  return player
+  return player;
 }
 
-export default initialize
+export default initialize;

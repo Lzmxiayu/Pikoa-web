@@ -13,7 +13,16 @@
   </div>
 </template>
 <script setup>
-const props = defineProps(['size', 'color'])
+defineProps({
+  size: {
+    type: Number,
+    default: 0,
+  },
+  color: {
+    type: String,
+    default: '',
+  },
+});
 </script>
 <style scoped>
 @keyframes change {

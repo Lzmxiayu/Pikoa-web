@@ -12,7 +12,7 @@
       @click="jumpVideo(item)"
       @load="endLoading"
     />
-    <div class="video-desc" v-show="!isloading">
+    <div v-show="!isloading" class="video-desc">
       <div class="video-desc-left"></div>
       <div class="video-desc-right">
         <span>{{ view_time }}</span>
@@ -24,9 +24,9 @@
     <div class="title_line">
       <h3
         class="vdl-item-title"
-        v-html="item?.['title']"
         :title="item['title']"
         @click="jumpVideo(item)"
+        v-html="item?.['title']"
       ></h3>
       <icon-delete size="24" class="deleteIcon" />
     </div>
@@ -42,50 +42,40 @@
   </template>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import {
-  IconLiveBroadcast,
-  IconDice,
-  IconDelete,
-} from '@arco-design/web-vue/es/icon'
-import { formatTime } from '@/utils'
+import { computed, ref } from 'vue';
+import { IconLiveBroadcast, IconDelete } from '@arco-design/web-vue/es/icon';
+import { formatTime } from '@/utils';
 
-const props = defineProps(['item'])
+const props = defineProps(['item']);
 
-const isloading = ref(true)
-// const router = useRouter()
+const isloading = ref(true);
 
 const view_time = computed(() => {
   if (!props.item?.['progress'] || !props.item?.['duration'])
-    return '00:00/00:00'
-  const duration = formatTime(props.item?.['duration'] || 0)
-  if (props?.item?.['progress'] === -1) return `${duration}/${duration}`
-  return formatTime(props.item?.['progress'] || 0) + '/' + duration
-})
+    return '00:00/00:00';
+  const duration = formatTime(props.item?.['duration'] || 0);
+  if (props?.item?.['progress'] === -1) return `${duration}/${duration}`;
+  return formatTime(props.item?.['progress'] || 0) + '/' + duration;
+});
 
 const view_at = computed(() => {
-  if (!props.item?.['timeObj']) return
-  const { year, month, day, hour, minute } = props.item?.['timeObj']
-  return `${month}-${day} ${hour}:${minute}`
-})
+  if (!props.item?.['timeObj']) return;
+  const { month, day, hour, minute } = props.item?.['timeObj'] || {};
+  return `${month}-${day} ${hour}:${minute}`;
+});
 
 const scrollBarWidth = computed(() => {
-  if (!props.item?.['progress'] || !props.item?.['duration']) return 0
-  if (props?.item?.['progress'] === -1) return 100
-  return Math.ceil((props.item?.['progress'] / props.item?.['duration']) * 100)
-})
+  if (!props.item?.['progress'] || !props.item?.['duration']) return 0;
+  if (props?.item?.['progress'] === -1) return 100;
+  return Math.ceil((props.item?.['progress'] / props.item?.['duration']) * 100);
+});
 
 function endLoading() {
-  isloading.value = false
-}
-
-function playdesciption(val) {
-  return val > 10000 ? Math.floor(val / 10000) + '万' : val
+  isloading.value = false;
 }
 
 function jumpVideo(item) {
-  window.open(`${window.location.origin}/video?bvid=${item.history.bvid}`)
+  window.open(`${window.location.origin}/video?bvid=${item.history.bvid}`);
   // router.push({
   //   name: 'video',
   // })

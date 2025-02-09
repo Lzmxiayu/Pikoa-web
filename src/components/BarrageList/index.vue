@@ -8,12 +8,12 @@
         <div class="content">{{ '当前弹幕' }}</div>
         <div class="date">{{ '发送时间' }}</div>
       </div>
-      <div class="barrage-list-fixed" ref="barrageList">
+      <div ref="barrageList" class="barrage-list-fixed">
         <FixedList
           ref="fixedListEl"
           :list="showList"
-          :itemHeight="itemHeight"
-          :containerHeight="listHeight"
+          :item-height="itemHeight"
+          :container-height="listHeight"
         >
           <!-- <template v-slot:header>
           <div class="barrage-list-item">
@@ -24,7 +24,7 @@
             <div class="date">{{ '发送时间' }}</div>
           </div>
         </template> -->
-          <template v-slot:empty v-if="showList.length === 0">
+          <template v-if="showList.length === 0" #empty>
             <div class="barrage-list-empty">
               <a-empty
                 :style="{
@@ -36,7 +36,7 @@
               />
             </div>
           </template>
-          <template v-slot:single="{ item }">
+          <template #single="{ item }">
             <div class="barrage-list-item">
               <div class="stime">
                 {{ formatTime(Math.floor(item.stime / 1000)) }}
@@ -62,65 +62,70 @@
   </div>
 </template>
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref, watch, computed } from 'vue'
-import FixedList from '../common/FixedList.vue'
-import { timestampToDate2, formatTime, rgb888ToRgb } from '@/utils'
-import eventBus from '@/eventBus.ts'
+import { nextTick, onMounted, onUnmounted, ref, watch, computed } from 'vue';
+import FixedList from '../common/FixedList.vue';
+import { timestampToDate2, formatTime, rgb888ToRgb } from '@/utils';
+import eventBus from '@/eventBus.ts';
 
-const props = defineProps(['barrageInfo'])
+const props = defineProps({
+  barrageInfo: {
+    type: Object,
+    default: () => {},
+  },
+});
 
-const list = ref([])
-const barrageList = ref(null)
-const fixedListEl = ref(null)
-const showList = ref([])
-const itemHeight = ref(40)
-const curTime = ref(0)
+const list = ref([]);
+const barrageList = ref(null);
+const fixedListEl = ref(null);
+const showList = ref([]);
+const itemHeight = ref(40);
+const curTime = ref(0);
 
 const listHeight = computed(() => {
-  return barrageList.value ? barrageList.value.offsetHeight : 0
-})
+  return barrageList.value ? barrageList.value.offsetHeight : 0;
+});
 
 function updateList({ time }) {
-  curTime.value = time
-  showList.value = list.value.filter(item => item.stime < curTime.value * 1000)
-  const { fixedListWrap, scrollToBottom } = fixedListEl.value
+  curTime.value = time;
+  showList.value = list.value.filter(item => item.stime < curTime.value * 1000);
+  const { fixedListWrap, scrollToBottom } = fixedListEl.value;
   if (
     fixedListWrap.scrollTop + fixedListWrap.offsetHeight + 5 >=
     fixedListWrap.scrollHeight
   ) {
-    nextTick(scrollToBottom)
+    nextTick(scrollToBottom);
   }
 }
 
 watch(
   () => props.barrageInfo,
   newVal => {
-    const newList = newVal.elems.sort((a, b) => a.stime - b.stime)
+    const newList = newVal.elems.sort((a, b) => a.stime - b.stime);
     list.value = newList.map((elem, index) => {
-      const color = rgb888ToRgb(elem.color)
+      const color = rgb888ToRgb(elem.color);
       return {
         ...elem,
         index,
         id: elem.uhash,
         color: color === 'rgb(255, 255, 255)' ? '#000' : color,
-      }
-    })
+      };
+    });
 
     showList.value = list.value.filter(
       item => item.stime < curTime.value * 1000,
-    )
+    );
   },
   {
     immediate: true,
   },
-)
+);
 
 onMounted(() => {
-  eventBus.on('video_time_update', updateList)
-})
+  eventBus.on('video_time_update', updateList);
+});
 onUnmounted(() => {
-  eventBus.off('video_time_update', updateList)
-})
+  eventBus.off('video_time_update', updateList);
+});
 </script>
 <style lang="less" scoped>
 .barrage-list-wrap {

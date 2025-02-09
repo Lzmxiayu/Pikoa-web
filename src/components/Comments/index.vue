@@ -1,10 +1,10 @@
 <template>
-  <div class="comments-wrap" @scroll="handleScrollFn" ref="commentsWrap">
+  <div ref="commentsWrap" class="comments-wrap" @scroll="handleScrollFn">
     <div class="comments">
       <div
-        class="single-comment"
         v-for="comment in replies"
         :key="comment.dynamic_id"
+        class="single-comment"
       >
         <div class="single-comment-avatar">
           <img
@@ -34,26 +34,30 @@
         </div>
       </div>
     </div>
-    <div class="loading-line" v-if="loading">
+    <div v-if="loading" class="loading-line">
       <a-spin dot />
     </div>
-    <div class="end-tips" v-if="next_offset === '{}'">没有更多评论了......</div>
+    <div v-if="next_offset === '{}'" class="end-tips">没有更多评论了......</div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
-import { getComments } from '@/server'
-import { generateWbiParams } from '@/utils/wbi.js'
-import { processAvatarLink, timestampToDate2, throttle } from '@/utils'
-import { load } from 'protobufjs'
+import { onMounted, ref, watch } from 'vue';
+import { getComments } from '@/server';
+import { generateWbiParams } from '@/utils/wbi.js';
+import { processAvatarLink, timestampToDate2, throttle } from '@/utils';
 
-const props = defineProps(['baseInfo'])
+const props = defineProps({
+  baseInfo: {
+    type: Object,
+    default: () => {},
+  },
+});
 
-const commentsWrap = ref(null)
-const replies = ref([])
-const next_offset = ref('')
-const loading = ref(false)
+const commentsWrap = ref(null);
+const replies = ref([]);
+const next_offset = ref('');
+const loading = ref(false);
 
 function handleScroll(e) {
   // console.log(
@@ -61,15 +65,15 @@ function handleScroll(e) {
   //   commentsWrap.value.offsetHeight,
   //   commentsWrap.value.scrollHeight,
   // )
-  const { scrollTop, offsetHeight, scrollHeight } = e.target
+  const { scrollTop, offsetHeight, scrollHeight } = e.target;
   if (scrollTop + offsetHeight + 10 >= scrollHeight) {
     // 已经滚动到底部
-    if (next_offset.value === '{}') return
-    getNextReply()
+    if (next_offset.value === '{}') return;
+    getNextReply();
   }
 }
 
-const handleScrollFn = throttle(handleScroll, 50)
+const handleScrollFn = throttle(handleScroll, 50);
 
 function getNextReply() {
   const params = {
@@ -81,17 +85,17 @@ function getNextReply() {
     seek_rpid: '',
     web_location: 1315875,
     pagination_str: next_offset.value,
-  }
-  const endParams = generateWbiParams(params)
-  loading.value = true
+  };
+  const endParams = generateWbiParams(params);
+  loading.value = true;
   getComments(endParams).then(res => {
-    replies.value = replies.value.concat(res.replies)
+    replies.value = replies.value.concat(res.replies);
     next_offset.value = JSON.stringify({
       offset: res.cursor.pagination_reply.next_offset,
-    })
-    loading.value = false
+    });
+    loading.value = false;
     // console.log(next_offset.value)
-  })
+  });
 }
 
 // 列表宽度变化时重新计算高度
@@ -103,15 +107,15 @@ function getNextReply() {
 watch(
   () => props.baseInfo,
   () => {
-    replies.value = []
-    next_offset.value = ''
-    getNextReply()
+    replies.value = [];
+    next_offset.value = '';
+    getNextReply();
   },
-)
+);
 
 onMounted(() => {
   // observer.observe(commentsWrap.value)
-})
+});
 </script>
 
 <style scoped>

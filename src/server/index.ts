@@ -1,4 +1,4 @@
-import { Service } from '@/axios'
+import { Service } from '@/axios';
 
 export const searchAll = async (params: any) =>
   await Service({
@@ -6,7 +6,7 @@ export const searchAll = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const getVideoView = async (params: any) =>
   Service({
@@ -14,7 +14,7 @@ export const getVideoView = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const getPlayList = async (params: any) =>
   Service({
@@ -22,7 +22,7 @@ export const getPlayList = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const downloadFile = async (params?: any) =>
   Service({
@@ -30,7 +30,7 @@ export const downloadFile = async (params?: any) =>
     method: 'POST',
     params,
     config: undefined,
-  })
+  });
 
 export const getComments = async (params: any) =>
   Service({
@@ -38,7 +38,7 @@ export const getComments = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const getRelatedVideos = async (params: any) =>
   Service({
@@ -46,7 +46,7 @@ export const getRelatedVideos = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const getBarrage = async (params: any) =>
   Service({
@@ -56,7 +56,7 @@ export const getBarrage = async (params: any) =>
     config: {
       responseType: 'arraybuffer',
     },
-  })
+  });
 
 export const getVideoshot = async (params: any) =>
   Service({
@@ -64,15 +64,15 @@ export const getVideoshot = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
-export const getFrontRecommendVideos = async (params: any) =>
+export const getFrontRecommendVideos = async (params?: any) =>
   Service({
     url: '/api/base/front_rmcd_video',
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const getViewHistory = async (params: any) =>
   Service({
@@ -80,7 +80,7 @@ export const getViewHistory = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const getVideoDetail = async (params: any) =>
   Service({
@@ -88,7 +88,7 @@ export const getVideoDetail = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 /** 创作 */
 export const getUploadVideoInfo = async (params: any) =>
@@ -97,7 +97,7 @@ export const getUploadVideoInfo = async (params: any) =>
     method: 'GET',
     params,
     config: undefined,
-  })
+  });
 
 export const uploadVideoFile = async (params?: any) =>
   Service({
@@ -105,7 +105,7 @@ export const uploadVideoFile = async (params?: any) =>
     method: 'POST',
     params,
     config: undefined,
-  })
+  });
 
 export const uploadVideoMerge = async (params?: any) =>
   Service({
@@ -113,4 +113,4 @@ export const uploadVideoMerge = async (params?: any) =>
     method: 'POST',
     params,
     config: undefined,
-  })
+  });

@@ -12,7 +12,7 @@
       @click="jumpVideo(item)"
       @load="endLoading"
     />
-    <div class="video-desc" v-show="!isloading && !isPreViewing">
+    <div v-show="!isloading && !isPreViewing" class="video-desc">
       <div class="video-desc-left">
         <icon-live-broadcast size="22" style="margin-right: 5px" />
         <span>{{ playdesciption(item?.['play']) }}</span>
@@ -24,9 +24,9 @@
       </div>
     </div>
     <video
-      class="videoPlayer"
-      ref="video"
       v-show="isPreViewing"
+      ref="video"
+      class="videoPlayer"
       @click="jumpVideo(item)"
       @load="endLoading"
     ></video>
@@ -34,9 +34,9 @@
   <template v-if="!isloading">
     <h3
       class="vdl-item-title"
-      v-html="item?.['title']"
       :title="item['title']"
       @click="jumpVideo(item)"
+      v-html="item?.['title']"
     ></h3>
     <span class="author">{{ item?.['author'] }}</span>
   </template>
@@ -45,50 +45,48 @@
   </template>
 </template>
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useVideoInfoStore } from '@/stores/videoInfo'
-import { IconLiveBroadcast, IconDice } from '@arco-design/web-vue/es/icon'
-import VideoPlayer from '@/components/VideoPlayer/index.vue'
-import { getVideoView, getPlayList, getBarrage } from '@/server'
-import initialize from '@/components/videoPlayer/mse.js'
+import { ref } from 'vue';
+import { IconLiveBroadcast, IconDice } from '@arco-design/web-vue/es/icon';
+import { getVideoView, getPlayList } from '@/server';
+import initialize from '@/components/videoPlayer/mse.js';
 
-const props = defineProps(['item'])
+const dashjs = window.dashjs;
 
-const isloading = ref(true)
-const isPreViewing = ref(false)
-const router = useRouter()
-const video = ref(null)
-const videoPlayer = ref(null)
-const baseInfo = ref({})
-const playConfig = ref({})
+const props = defineProps(['item']);
+
+const isloading = ref(true);
+const isPreViewing = ref(false);
+const video = ref(null);
+const videoPlayer = ref(null);
+const baseInfo = ref({});
+const playConfig = ref({});
 
 // const videoInfoStore = useVideoInfoStore()
 
 function endLoading() {
-  isloading.value = false
+  isloading.value = false;
 }
 
 function playdesciption(val) {
-  return val > 10000 ? Math.floor(val / 10000) + '万' : val
+  return val > 10000 ? Math.floor(val / 10000) + '万' : val;
 }
 
 function jumpVideo(item) {
   // videoInfoStore.setBvid(item.bvid)
-  window.open(`${window.location.origin}/video?bvid=${item.bvid}`)
+  window.open(`${window.location.origin}/video?bvid=${item.bvid}`);
   // router.push({
   //   name: 'video',
   // })
 }
 
 function getMpdInfo() {
-  const { dash, timeStamp } = playConfig.value
-  if (!dash) return
-  const { video, audio } = dash
-  const baseUri = 'http://localhost:8080/api/'
+  const { dash, timeStamp } = playConfig.value;
+  if (!dash) return;
+  const { video } = dash;
+  const baseUri = 'http://localhost:8080/api/';
   const leftvideo = video
     .filter(el => !el.codecs.includes('hev'))
-    .sort((a, b) => a.id - b.id)
+    .sort((a, b) => a.id - b.id);
   const videoConfig = leftvideo.slice(0, 1).map((item, index) => ({
     baseUrl: '/api/video/playStream?mimeType=video&track='
       .concat(index)
@@ -98,7 +96,7 @@ function getMpdInfo() {
     width: item.width,
     frameRate: item.frameRate,
     codecs: item.codecs,
-  }))
+  }));
 
   const audioConfig = [
     // {
@@ -106,58 +104,58 @@ function getMpdInfo() {
     //   bandwidth: audio[0].bandwidth,
     //   codecs: audio[0].codecs,
     // },
-  ]
-  const { duration, minBufferTime } = dash
+  ];
+  const { duration, minBufferTime } = dash;
   return {
     baseUri,
     video: videoConfig,
     audio: audioConfig,
     duration,
     minBufferTime: minBufferTime,
-  }
+  };
 }
 
 function initPlayer() {
-  const mpdInfo = getMpdInfo()
-  videoPlayer.value = initialize(video.value, mpdInfo)
+  const mpdInfo = getMpdInfo();
+  videoPlayer.value = initialize(video.value, mpdInfo);
   videoPlayer.value.on(dashjs.MediaPlayer.events.CAN_PLAY, () => {
-    videoPlayer.value.setMute(true)
-    if (isPreViewing.value) videoPlayer.value.play()
-  })
+    videoPlayer.value.setMute(true);
+    if (isPreViewing.value) videoPlayer.value.play();
+  });
 }
 
 async function getPlayConfig() {
-  const { bvid, aid, cid } = baseInfo.value
-  playConfig.value = await getPlayList({ bvid, avid: aid, cid })
+  const { bvid, aid, cid } = baseInfo.value;
+  playConfig.value = await getPlayList({ bvid, avid: aid, cid });
 }
 
 async function getBaseInfo(params) {
-  baseInfo.value = await getVideoView(params)
+  baseInfo.value = await getVideoView(params);
   // videoInfoStore.setBaseInfo(baseInfo.value)
 }
 
 async function getInfo() {
-  console.log(props.item)
-  await getBaseInfo({ bvid: props.item.bvid })
-  await getPlayConfig()
+  // console.log(props.item);
+  await getBaseInfo({ bvid: props.item.bvid });
+  await getPlayConfig();
   // getBarrageFn()
 }
 
 async function previewVideo() {
   if (videoPlayer.value) {
-    isPreViewing.value = true
-    videoPlayer.value.play()
-    return
+    isPreViewing.value = true;
+    videoPlayer.value.play();
+    return;
   }
-  isPreViewing.value = true
-  await getInfo()
-  initPlayer()
+  isPreViewing.value = true;
+  await getInfo();
+  initPlayer();
 }
 
 function exitPreview() {
-  isPreViewing.value = false
+  isPreViewing.value = false;
   if (videoPlayer.value) {
-    videoPlayer.value.pause()
+    videoPlayer.value.pause();
   }
 }
 </script>

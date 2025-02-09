@@ -1,11 +1,9 @@
 <script setup>
-// import { RouterLink, RouterView } from 'vue-router'
-import '@/assets/base.css'
-import FrontPage from './views/FrontPage2.vue'
+import '@/assets/base.css';
+import Layout from './views/Layout.vue';
 </script>
 
 <template>
-  <FrontPage />
-  <!-- <RouterView /> -->
+  <Layout />
 </template>
 <style scoped></style>

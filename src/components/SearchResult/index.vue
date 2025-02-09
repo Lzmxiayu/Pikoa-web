@@ -1,41 +1,50 @@
 <template>
   <div class="video-rect-list">
     <div
-      class="video-rect-item"
       v-for="result in results.slice(0, sliceLength)"
       :key="result"
+      class="video-rect-item"
     >
       <ResultItem :item="result" />
     </div>
   </div>
 </template>
 <script setup>
-import { ref, watch, onMounted } from 'vue'
-import ResultItem from './ResultItem.vue'
+import { ref, watch, onMounted } from 'vue';
+import ResultItem from './ResultItem.vue';
 
-const props = defineProps(['results', 'width'])
+const props = defineProps({
+  results: {
+    type: Array,
+    default: () => [],
+  },
+  width: {
+    type: Number,
+    default: 0,
+  },
+});
 
-const sliceLength = ref(42)
+const sliceLength = ref(42);
 
-const singleWidth = [0, 1200, 1700, 2200, 2700]
+const singleWidth = [0, 1200, 1700, 2200, 2700];
 
 const observer = new ResizeObserver(entries => {
-  const width = entries[0].contentRect.width
-  const single = 4 + singleWidth.findIndex(item => width < item) - 1
-  sliceLength.value = Math.floor(props.results.length / single) * single
-})
+  const width = entries[0].contentRect.width;
+  const single = 4 + singleWidth.findIndex(item => width < item) - 1;
+  sliceLength.value = Math.floor(props.results.length / single) * single;
+});
 
 watch(
   () => props.results,
   () => {
-    const width = document.querySelector('html').offsetWidth
-    const single = 4 + singleWidth.findIndex(item => width < item) - 1
-    sliceLength.value = Math.floor(props.results.length / single) * single
+    const width = document.querySelector('html').offsetWidth;
+    const single = 4 + singleWidth.findIndex(item => width < item) - 1;
+    sliceLength.value = Math.floor(props.results.length / single) * single;
   },
-)
+);
 onMounted(() => {
-  observer.observe(document.querySelector('html'))
-})
+  observer.observe(document.querySelector('html'));
+});
 </script>
 
 <style scoped>

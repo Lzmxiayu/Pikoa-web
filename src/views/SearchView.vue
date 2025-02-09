@@ -10,12 +10,12 @@
         @search="beginSearch"
       />
     </div>
-    <div class="content-wrap" ref="videoResultEl">
+    <div ref="videoResultEl" class="content-wrap">
       <a-space
+        v-if="isSearching"
         direction="vertical"
         size="large"
         :style="{ width: '100%' }"
-        v-if="isSearching"
       >
         <a-skeleton :animation="true">
           <a-space direction="vertical" :style="{ width: '100%' }" size="large">
@@ -24,7 +24,7 @@
           </a-space>
         </a-skeleton>
       </a-space>
-      <SearchResult :results="curResult" v-else />
+      <SearchResult v-else :results="curResult" />
       <!-- <div class="video-rect-list">
         <div
           class="video-rect-item"
@@ -35,66 +35,66 @@
     </div>
     <div class="bottom-wrap">
       <a-pagination
+        v-if="curResult.length > 0 && !isSearching"
         v-model:current="page"
         :total="1000"
         :page-size="42"
         show-jumper
         @change="onSearch"
-        v-if="curResult.length > 0 && !isSearching"
       />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import SearchResult from '@/components/SearchResult/index.vue'
-import { searchAll } from '@/server'
-import { parseUrlParams, changeUrlSearchParam } from '@/utils'
+import { ref, onMounted } from 'vue';
+import SearchResult from '@/components/SearchResult/index.vue';
+import { searchAll } from '@/server';
+import { parseUrlParams, changeUrlSearchParam } from '@/utils';
 
-const page = ref(1)
-const curResult = ref([])
-const isSearching = ref(false)
+const page = ref(1);
+const curResult = ref([]);
+const isSearching = ref(false);
 
-const searchWord = ref('')
-const videoResultEl = ref(null)
+const searchWord = ref('');
+const videoResultEl = ref(null);
 
 function beginSearch() {
-  curResult.value = []
-  page.value = 1
-  onSearch()
-  changeUrlSearchParam([{ key: 'keyword', value: searchWord.value }])
+  curResult.value = [];
+  page.value = 1;
+  onSearch();
+  changeUrlSearchParam([{ key: 'keyword', value: searchWord.value }]);
 }
 
 async function onSearch() {
-  isSearching.value = true
+  isSearching.value = true;
   let data = await searchAll({
     keyword: searchWord.value,
     page_size: 42,
     platform: 'pc',
     page: page.value,
-  })
+  });
   data = data.result
     .find(rs => rs.result_type === 'video')
     .data.map(val => {
-      let { pic } = val
+      let { pic } = val;
       const pic2 = pic
         .replace('i1.hdslb.com', 'localhost:8080')
         .replace('i0.hdslb.com', 'localhost:8080')
-        .replace('i2.hdslb.com', 'localhost:8080')
-      return { ...val, pic: pic2 }
-    })
+        .replace('i2.hdslb.com', 'localhost:8080');
+      return { ...val, pic: pic2 };
+    });
   // console.log(data)
-  curResult.value = data
-  isSearching.value = false
+  curResult.value = data;
+  isSearching.value = false;
 }
 onMounted(() => {
-  const { keyword } = parseUrlParams(window.location.href)
+  const { keyword } = parseUrlParams(window.location.href);
   if (keyword) {
-    searchWord.value = keyword
-    onSearch()
+    searchWord.value = keyword;
+    onSearch();
   }
-})
+});
 </script>
 
 <style scoped>

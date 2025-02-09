@@ -1,12 +1,12 @@
 <template>
   <svg
+    id="Layer_1"
     xml:space="preserve"
     viewBox="0 0 100 100"
     y="0px"
     x="0px"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns="http://www.w3.org/2000/svg"
-    id="Layer_1"
     version="1.1"
     style="margin: initial; display: block; shape-rendering: auto"
     preserveAspectRatio="xMidYMid"

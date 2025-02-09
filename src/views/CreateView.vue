@@ -10,8 +10,8 @@
   </div>
 </template>
 <script setup>
-import { IconDriveFile } from '@arco-design/web-vue/es/icon'
-import UploadDragger from '@/components/UploadDragger/index.vue'
+import { IconDriveFile } from '@arco-design/web-vue/es/icon';
+import UploadDragger from '@/components/UploadDragger/index.vue';
 </script>
 <style lang="less" scoped>
 .create-wrap,

@@ -1,5 +1,5 @@
 <template>
-  <div class="comments-wrap" @scroll="handleScrollFn" ref="commentsWrap">
+  <div ref="commentsWrap" class="comments-wrap" @scroll="handleScrollFn">
     <div
       class="comments"
       :style="{
@@ -7,9 +7,9 @@
       }"
     >
       <div
-        class="single-comment"
         v-for="comment in showList"
         :key="comment.dynamic_id"
+        class="single-comment"
         :style="{ top: `${comment.top}px` }"
       >
         <div class="single-comment-avatar">
@@ -42,47 +42,40 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
-import { getComments } from '@/server'
-import { generateWbiParams } from '@/utils/wbi.js'
-import { processAvatarLink, debounce, throttle } from '@/utils'
+import { onMounted, ref, watch } from 'vue';
+import { getComments } from '@/server';
+import { generateWbiParams } from '@/utils/wbi.js';
+import { processAvatarLink, throttle } from '@/utils';
 
-const props = defineProps(['baseInfo'])
+const props = defineProps({
+  baseInfo: {
+    type: Object,
+    default: () => {},
+  },
+});
 
-const commentsWrap = ref(null)
-const replies = ref([])
-const next_offset = ref('')
-const showList = ref([])
-const totalHeight = ref(0) // 列表总高度
-const summation = ref([]) // 累加高度数组
-
-function generateTextDom() {
-  const text = document.createElement('div')
-  text.classList.add('single-comment-content-text')
-  commentsWrap.value.querySelector('.comments').appendChild(text)
-  text.innerText = 'abcfuck'
-  console.log(text.offsetHeight)
-  text.innerText =
-    'abdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuckabdqwdqwddqwcfuck'
-  console.log(text.offsetHeight)
-}
+const commentsWrap = ref(null);
+const replies = ref([]);
+// const next_offset = ref('');
+const showList = ref([]);
+const totalHeight = ref(0); // 列表总高度
+const summation = ref([]); // 累加高度数组
 
 function getHeight() {
-  // generateTextDom()
-  const singleMessageWidth = commentsWrap.value.offsetWidth - 80 - 20
-  const fontSize = 16
-  const lineHeight = 22
-  summation.value = [0]
-  totalHeight.value = replies.value.reduce((pre, cur, idx) => {
-    cur.top = pre
+  const singleMessageWidth = commentsWrap.value.offsetWidth - 80 - 20;
+  const fontSize = 16;
+  const lineHeight = 22;
+  summation.value = [0];
+  totalHeight.value = replies.value.reduce((pre, cur) => {
+    cur.top = pre;
     const lines = Math.ceil(
       cur.content.message.length / Math.floor(singleMessageWidth / fontSize),
-    )
-    const height = lines * lineHeight + (26 + 10) + 10 + 23 + 20
-    console.log(height)
-    summation.value.push(pre + (height > 150 ? height : 150))
-    return pre + (height > 150 ? height : 150)
-  }, 0)
+    );
+    const height = lines * lineHeight + (26 + 10) + 10 + 23 + 20;
+    // console.log(height);
+    summation.value.push(pre + (height > 150 ? height : 150));
+    return pre + (height > 150 ? height : 150);
+  }, 0);
 }
 
 function handleScroll(e) {
@@ -91,18 +84,18 @@ function handleScroll(e) {
   const start = Math.max(
     summation.value.findIndex(item => item >= e.target.scrollTop - 25) - 2,
     0,
-  )
+  );
   const end = Math.min(
     summation.value.findIndex(
       item => item >= e.target.scrollTop + e.target.offsetHeight - 25,
     ) + 2,
     replies.value.length,
-  )
-  console.log(start, end)
-  showList.value = replies.value.slice(start, end)
+  );
+  // console.log(start, end);
+  showList.value = replies.value.slice(start, end);
 }
 
-const handleScrollFn = throttle(handleScroll, 50)
+const handleScrollFn = throttle(handleScroll, 50);
 
 function getReply() {
   const params = {
@@ -128,28 +121,28 @@ function getReply() {
         },
       }),
     }),
-  }
-  const endParams = generateWbiParams(params)
+  };
+  const endParams = generateWbiParams(params);
   getComments(endParams).then(res => {
-    replies.value = res.replies
-    console.log(res)
-    getHeight()
-    handleScroll({ target: commentsWrap.value })
-  })
+    replies.value = res.replies;
+    console.log(res);
+    getHeight();
+    handleScroll({ target: commentsWrap.value });
+  });
 }
 
 // 列表宽度变化时重新计算高度
-const observer = new ResizeObserver(entries => {
+const observer = new ResizeObserver(() => {
   // console.log(entries)
-  getHeight()
-  handleScroll({ target: commentsWrap.value })
-})
+  getHeight();
+  handleScroll({ target: commentsWrap.value });
+});
 
-watch(() => props.baseInfo, getReply)
+watch(() => props.baseInfo, getReply);
 
 onMounted(() => {
-  observer.observe(commentsWrap.value)
-})
+  observer.observe(commentsWrap.value);
+});
 </script>
 
 <style scoped>

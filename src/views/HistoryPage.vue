@@ -1,6 +1,6 @@
 <template>
   <div class="history-wrap" @scroll="handleScroll">
-    <a-timeline labelPosition="relative">
+    <a-timeline label-position="relative">
       <a-timeline-item
         v-for="item in viewVideosByDate"
         :key="item.desc"
@@ -14,9 +14,9 @@
         </template>
         <div class="history-list">
           <div
-            class="history-list-item"
             v-for="history in item.list"
             :key="history.kid"
+            class="history-list-item"
           >
             <HistoryViewItem :item="history" />
             <!-- <span>{{ history.title }}</span> -->
@@ -26,80 +26,96 @@
     </a-timeline>
   </div>
 </template>
-<script setup>
-import { ref, onMounted, computed } from 'vue'
-import HistoryViewItem from '@/components/common/HistoryViewItem.vue'
-import { getViewHistory } from '@/server'
-import { timestampToDateObj } from '@/utils/time_worker.js'
+<script setup lang="ts">
+import { ref, onMounted, computed } from 'vue';
+import HistoryViewItem from '@/components/common/HistoryViewItem.vue';
+import { getViewHistory } from '@/server';
+import { timestampToDateObj } from '@/utils/time_worker';
 
-async function getViewedHistory(params) {
-  const res = await getViewHistory(params)
-  //   timeStampWorker.postMessage(timeStamps)
-  //   const timeStampWorker = new Worker() // 创建worker
-  //   console.log(timeStampWorker)
-  //   timeStampWorker.addEventListener('message', e => {
-  //     console.log(e.data)
-  //   })
-  res.list.forEach(item => {
+interface HistoryItem {
+  cover: string;
+  title: string;
+  view_at: number;
+  timeObj: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+    minute: number;
+    second: number;
+  };
+  kid: number;
+}
+
+async function getViewedHistory(params: {
+  max: any;
+  view_at: any;
+  business: string;
+  ps: number;
+  type: string;
+  web_location: number;
+}) {
+  const res: any = await getViewHistory(params);
+  res.list.forEach((item: any) => {
     item.cover = item.cover
       .replace('i1.hdslb.com', 'localhost:8080')
       .replace('i0.hdslb.com', 'localhost:8080')
-      .replace('i2.hdslb.com', 'localhost:8080')
-    item.timeObj = timestampToDateObj(item.view_at * 1000)
-  })
-  historyList.value = historyList.value.concat(res.list)
-  historyList.value.sort((a, b) => b.view_at - a.view_at)
+      .replace('i2.hdslb.com', 'localhost:8080');
+    item.timeObj = timestampToDateObj(item.view_at * 1000);
+  });
+  historyList.value = historyList.value.concat(res.list);
+  historyList.value.sort((a, b) => b.view_at - a.view_at);
 }
-const historyList = ref([])
+const historyList = ref<HistoryItem[]>([]);
 
 const viewVideosByDate = computed(() => {
   // 分成今天，昨天，近一周
-  const catoryList = [[], [], [], []]
-  const now = Date.now()
-  const nowObj = timestampToDateObj(now)
+  const catoryList: HistoryItem[][] = [[], [], [], []];
+  const now = Date.now();
+  const nowObj = timestampToDateObj(now);
   const todayBegin =
     now -
     (Number(nowObj.hour) * 3600 +
       Number(nowObj.minute) * 60 +
       Number(nowObj.second)) *
-      1000
-  const yesterdayBegin = todayBegin - 24 * 3600 * 1000
-  const weekAgoBegin = todayBegin - 24 * 3600 * 1000 * 7
+      1000;
+  const yesterdayBegin = todayBegin - 24 * 3600 * 1000;
+  const weekAgoBegin = todayBegin - 24 * 3600 * 1000 * 7;
   //   console.log('todayBegin', todayBegin, yesterdayBegin, weekAgoBegin)
   historyList.value.forEach(item => {
-    const timeStamp = item.view_at * 1000
+    const timeStamp = item.view_at * 1000;
     if (timeStamp >= todayBegin) {
       // 今天
-      catoryList[0].push(item)
+      catoryList[0].push(item);
     } else if (timeStamp >= yesterdayBegin) {
       // 昨天
-      catoryList[1].push(item)
+      catoryList[1].push(item);
     } else if (timeStamp >= weekAgoBegin) {
       // 近一周
-      catoryList[2].push(item)
+      catoryList[2].push(item);
     } else {
       //一周前
-      catoryList[3].push(item)
+      catoryList[3].push(item);
     }
-  })
-  const renderTimeline = []
-  const timeStr = ['今天', '昨天', '近一周', '一周前']
+  });
+  const renderTimeline: { desc: string; list: HistoryItem[] }[] = [];
+  const timeStr = ['今天', '昨天', '近一周', '一周前'];
   catoryList.forEach((item, index) => {
     if (item.length > 0) {
       renderTimeline.push({
         desc: timeStr[index],
         list: item,
-      })
+      });
     }
-  })
-  return renderTimeline
-})
+  });
+  return renderTimeline;
+});
 // 待实现函数：给定当前时间戳a和时间戳b，以及天数t, 判断b是否在a的前t天内
 
-function handleScroll(e) {
-  const { scrollTop, offsetHeight, scrollHeight } = e.target
+function handleScroll(e: Event) {
+  const { scrollTop, offsetHeight, scrollHeight } = e.target as any;
   if (scrollTop + offsetHeight + 10 >= scrollHeight) {
-    console.log('kid', historyList.value?.[historyList.value.length - 1]?.kid)
+    console.log('kid', historyList.value?.[historyList.value.length - 1]?.kid);
     // 已经滚动到底部
     const params = {
       max: historyList.value?.[historyList.value.length - 1]?.kid || 0,
@@ -108,8 +124,8 @@ function handleScroll(e) {
       ps: 25,
       type: 'all',
       web_location: 333.1391,
-    }
-    getViewedHistory(params)
+    };
+    getViewedHistory(params);
   }
 }
 
@@ -121,9 +137,9 @@ onMounted(() => {
     ps: 25,
     type: 'all',
     web_location: 333.1391,
-  }
-  getViewedHistory(params)
-})
+  };
+  getViewedHistory(params);
+});
 </script>
 <style lang="less" scoped>
 .history-wrap {

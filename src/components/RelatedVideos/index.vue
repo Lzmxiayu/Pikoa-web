@@ -6,9 +6,9 @@
   >
     <div className="related-list">
       <div
-        class="related-item"
         v-for="item in relatedList"
         :key="item.bvid || Date.now()"
+        class="related-item"
         @click="handleVideoItemClick(item)"
       >
         <img :alt="item.title" :src="processPic(item.pic)" />
@@ -22,37 +22,35 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useVideoInfoStore } from '@/stores/videoInfo'
-import { storeToRefs } from 'pinia'
-import { getRelatedVideos } from '@/server'
-import { processPic } from '@/utils'
+import { ref, watch } from 'vue';
+import { useVideoInfoStore } from '@/stores/videoInfo';
+import { storeToRefs } from 'pinia';
+import { getRelatedVideos } from '@/server';
+import { processPic } from '@/utils';
 
-const props = defineProps(['relatedList'])
-
-const videoInfoStore = useVideoInfoStore()
-const { bvid } = storeToRefs(videoInfoStore)
-const relatedList = ref([])
+const videoInfoStore = useVideoInfoStore();
+const { bvid } = storeToRefs(videoInfoStore);
+const relatedList = ref([]);
 
 async function getRelatedVideosFn() {
-  relatedList.value = []
+  relatedList.value = [];
   const res = await getRelatedVideos({
     bvid: bvid.value,
-  })
-  relatedList.value = res
+  });
+  relatedList.value = res;
 }
 
 function handleVideoItemClick(item) {
-  videoInfoStore.setBvid(item.bvid)
+  videoInfoStore.setBvid(item.bvid);
 }
 watch(
   () => bvid.value,
   () => {
     if (bvid.value) {
-      getRelatedVideosFn()
+      getRelatedVideosFn();
     }
   },
-)
+);
 </script>
 
 <style lang="less" scoped>

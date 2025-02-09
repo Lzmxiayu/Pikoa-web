@@ -36,6 +36,7 @@ declare module 'vue' {
     ATimelineItem: typeof import('@arco-design/web-vue')['TimelineItem']
     Barrage: typeof import('./src/components/VideoPlayer/Barrage.vue')['default']
     BarrageList: typeof import('./src/components/BarrageList/index.vue')['default']
+    BarragePlayer: typeof import('./src/components/VideoPlayer/BarragePlayer.vue')['default']
     CollectionList: typeof import('./src/components/CollectionList/index.vue')['default']
     Comments: typeof import('./src/components/Comments/index.vue')['default']
     ControlBar: typeof import('./src/components/VideoPlayer/ControlBar.vue')['default']

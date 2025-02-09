@@ -3,15 +3,15 @@
     <button id="1">水下世界 - 乌龟版</button>
     <button id="2">大海之上 - 鳄鱼版</button>
   </div> -->
-  <div class="animation" ref="animation"></div>
+  <div ref="animation" class="animation"></div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue';
 
-const animation = ref(null)
+const animation = ref(null);
 function init() {
-  const body = animation.value
-  const lerp = (start, end, amt) => (1 - amt) * start + amt * end // 计算线性插值
+  const body = animation.value;
+  const lerp = (start, end, amt) => (1 - amt) * start + amt * end; // 计算线性插值
   // import { barnerImagesData1, barnerImagesData2 } from 'https://code.juejin.cn/api/raw/7267103634863702050?id=7267103634863751202'
   const barnerImagesData1 = [
     {
@@ -127,7 +127,7 @@ function init() {
       width: 2400,
       a: 0.25,
     },
-  ]
+  ];
 
   const barnerImagesData2 = [
     {
@@ -241,13 +241,13 @@ function init() {
       a: 0.16,
       blur: 3,
     },
-  ]
+  ];
 
-  const barnersData = [barnerImagesData1, barnerImagesData2]
-  let allImagesData = barnerImagesData2
+  const barnersData = [barnerImagesData1, barnerImagesData2];
+  let allImagesData = barnerImagesData2;
 
-  let compensate = 0 // 视窗补偿值
-  let layers = [] // DOM集合
+  let compensate = 0; // 视窗补偿值
+  let layers = []; // DOM集合
 
   // document.getElementById('selectBox').addEventListener('click', e => {
   //   const setData = barnersData[+e.target.id - 1]
@@ -260,81 +260,81 @@ function init() {
 
   // 添加图片元素
   function initItems() {
-    compensate = window.innerWidth > 1650 ? window.innerWidth / 1650 : 1
+    compensate = window.innerWidth > 1650 ? window.innerWidth / 1650 : 1;
     if (layers.length <= 0) {
-      body.style.display = 'none'
+      body.style.display = 'none';
       for (let i = 0; i < allImagesData.length; i++) {
-        const item = allImagesData[i]
-        const layer = document.createElement('div')
-        layer.classList.add('animation_layer')
-        layer.style = 'transform:' + new DOMMatrix(item.transform)
-        item.opacity && (layer.style.opacity = item.opacity[0])
-        const img = document.createElement('img')
-        img.classList.add('animation_layer_img')
-        img.src = item.url
-        img.style.filter = `blur(${item.blur}px)`
-        img.style.width = `${item.width * compensate}px`
-        layer.appendChild(img)
-        body.appendChild(layer)
+        const item = allImagesData[i];
+        const layer = document.createElement('div');
+        layer.classList.add('animation_layer');
+        layer.style = 'transform:' + new DOMMatrix(item.transform);
+        item.opacity && (layer.style.opacity = item.opacity[0]);
+        const img = document.createElement('img');
+        img.classList.add('animation_layer_img');
+        img.src = item.url;
+        img.style.filter = `blur(${item.blur}px)`;
+        img.style.width = `${item.width * compensate}px`;
+        layer.appendChild(img);
+        body.appendChild(layer);
       }
-      body.style.display = ''
-      layers = document.querySelectorAll('.animation_layer')
+      body.style.display = '';
+      layers = document.querySelectorAll('.animation_layer');
     } else {
       for (let i = 0; i < layers.length; i++) {
         layers[i].firstElementChild.style.width =
-          `${allImagesData[i].width * compensate}px`
+          `${allImagesData[i].width * compensate}px`;
       }
     }
   }
-  initItems()
+  initItems();
 
-  let initX = 0
-  let moveX = 0
-  let startTime = 0
-  const duration = 300 // 动画持续时间（毫秒）
+  let initX = 0;
+  let moveX = 0;
+  let startTime = 0;
+  const duration = 300; // 动画持续时间（毫秒）
   function mouseMove() {
     // 滑动操作
-    animate()
+    animate();
   }
   function leave() {
-    startTime = 0
-    requestAnimationFrame(homing) // 开始动画
+    startTime = 0;
+    requestAnimationFrame(homing); // 开始动画
   }
   function homing(timestamp) {
-    !startTime && (startTime = timestamp)
-    const elapsed = timestamp - startTime
-    const progress = Math.min(elapsed / duration, 1)
-    animate(progress) // 传递动画进度
-    progress < 1 && requestAnimationFrame(homing) // 继续下一帧
+    !startTime && (startTime = timestamp);
+    const elapsed = timestamp - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    animate(progress); // 传递动画进度
+    progress < 1 && requestAnimationFrame(homing); // 继续下一帧
   }
   // 动画执行
   function animate(progress) {
-    if (layers.length <= 0) return
-    const isHoming = typeof progress === 'number'
+    if (layers.length <= 0) return;
+    const isHoming = typeof progress === 'number';
     for (let i = 0; i < layers.length; i++) {
-      const layer = layers[i]
-      const item = allImagesData[i]
-      let m = new DOMMatrix(item.transform)
-      let move = moveX * item.a // 移动X translateX
-      let s = item.f ? item.f * moveX + 1 : 1 // 放大比例 Scale
-      let g = moveX * (item.g || 0) // 移动Y translateY
+      const layer = layers[i];
+      const item = allImagesData[i];
+      let m = new DOMMatrix(item.transform);
+      let move = moveX * item.a; // 移动X translateX
+      let s = item.f ? item.f * moveX + 1 : 1; // 放大比例 Scale
+      let g = moveX * (item.g || 0); // 移动Y translateY
       if (isHoming) {
         // 回正时处理
         m.e = lerp(
           moveX * item.a + item.transform[4],
           item.transform[4],
           progress,
-        )
-        move = 0
-        s = lerp(item.f ? item.f * moveX + 1 : 1, 1, progress)
-        g = lerp(item.g ? item.g * moveX : 0, 0, progress)
+        );
+        move = 0;
+        s = lerp(item.f ? item.f * moveX + 1 : 1, 1, progress);
+        g = lerp(item.g ? item.g * moveX : 0, 0, progress);
       }
-      m = m.multiply(new DOMMatrix([m.a * s, m.b, m.c, m.d * s, move, g]))
+      m = m.multiply(new DOMMatrix([m.a * s, m.b, m.c, m.d * s, move, g]));
       if (item.deg) {
         // 有旋转角度
         const deg = isHoming
           ? lerp(item.deg * moveX, 0, progress)
-          : item.deg * moveX
+          : item.deg * moveX;
         m = m.multiply(
           new DOMMatrix([
             Math.cos(deg),
@@ -344,7 +344,7 @@ function init() {
             0,
             0,
           ]),
-        )
+        );
       }
       if (item.opacity) {
         // 有透明度变化
@@ -355,27 +355,27 @@ function init() {
                 item.opacity[0],
                 item.opacity[1],
                 (moveX / window.innerWidth) * 2,
-              )
+              );
       }
-      layer.style.transform = m // 应用所有变换效果
+      layer.style.transform = m; // 应用所有变换效果
     }
   }
   // 鼠标滑入与滑动
-  body.addEventListener('mouseover', e => (initX = e.pageX))
+  body.addEventListener('mouseover', e => (initX = e.pageX));
   body.addEventListener('mousemove', e => {
-    moveX = e.pageX - initX
-    requestAnimationFrame(mouseMove)
-  })
+    moveX = e.pageX - initX;
+    requestAnimationFrame(mouseMove);
+  });
   // 鼠标已经离开了视窗或者切出浏览器，执行回正动画
-  body.addEventListener('mouseleave', leave)
+  body.addEventListener('mouseleave', leave);
   // document.addEventListener("mouseleave", leave)
-  window.onblur = leave
+  window.onblur = leave;
   // 添加窗口大小监听
-  window.addEventListener('resize', initItems)
+  window.addEventListener('resize', initItems);
 }
 onMounted(() => {
-  init()
-})
+  init();
+});
 </script>
 <style scoped>
 .animation {

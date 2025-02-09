@@ -53,19 +53,26 @@
     </a-layout>
   </div>
 </template>
-<script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { IconRefresh } from '@arco-design/web-vue/es/icon'
-import { getFrontRecommendVideos } from '@/server'
-import Animation from '@/components/Animation/index.vue'
-import ResultItem from '@/components/SearchResult/ResultItem.vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { IconRefresh } from '@arco-design/web-vue/es/icon';
+import { getFrontRecommendVideos } from '@/server';
+import ResultItem from '@/components/SearchResult/ResultItem.vue';
 
-const rmcdVideos = ref([])
+interface Video {
+  id: number;
+  title: string;
+  pic: string;
+  author: string;
+  play: number;
+  danmaku: number;
+}
+
+const rmcdVideos = ref<Video[]>([]);
 async function getFrontRecommendVideosFn() {
-  const res = await getFrontRecommendVideos()
-  rmcdVideos.value = res.item
-  rmcdVideos.value = (rmcdVideos.value || []).map(item => {
+  const res: any = await getFrontRecommendVideos();
+  rmcdVideos.value = res.item;
+  rmcdVideos.value = (rmcdVideos.value || []).map((item: any) => {
     return Object.assign({}, item, {
       danmaku: item.stat.danmaku,
       pic: item.pic
@@ -74,23 +81,24 @@ async function getFrontRecommendVideosFn() {
         .replace('i2.hdslb.com', 'localhost:8080'),
       author: item.owner.name,
       play: item.stat.view,
-    })
-  })
-  console.log(res)
+    });
+  });
+  // console.log(res);
 }
 
-const images = computed(() => {
-  return (rmcdVideos.value || []).map(item => item.pic)
-})
+// const images = computed(() => {
+//   return (rmcdVideos.value || []).map(item => item.pic);
+// });
 
-function jumpSearch(e) {
-  console.log(e.target.value)
-  window.open(`${window.location.origin}/search?keyword=${e.target.value}`)
+function jumpSearch(e: { target: { value: string } }) {
+  // console.log(e.target.value);
+  const keyword = e.target.value;
+  window.open(`${window.location.origin}/search?keyword=${keyword}`);
 }
 
 onMounted(async () => {
-  await getFrontRecommendVideosFn()
-})
+  await getFrontRecommendVideosFn();
+});
 </script>
 <style lang="less" scoped>
 .front_page {

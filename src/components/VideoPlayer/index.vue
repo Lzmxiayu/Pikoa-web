@@ -17,8 +17,8 @@
       </div>
     </div>
     <div
-      class="video-player"
       ref="videoPlayerEl"
+      class="video-player"
       :class="{
         hiddenCursor: !controlBarState.isShow,
         'tab-full-screen': tabFullscreen,
@@ -29,7 +29,7 @@
       @mouseleave="setControlBarShow(false)"
     >
       <div class="video-wrap">
-        <div class="video-wrap-loading" v-if="pending">
+        <div v-if="pending" class="video-wrap-loading">
           <div class="rocket-launcher">
             <Rocket />
           </div>
@@ -44,25 +44,25 @@
         ></video>
       </div>
       <br />
-      <div class="control-bar" ref="controlBarEl" @click.stop="">
+      <div ref="controlBarEl" class="control-bar" @click.stop="">
         <ControlBar
           :class="{
             hidden: !controlBarState.isShow,
           }"
-          :isFullScreen="isFullScreen"
-          :videoEl="video"
-          :videoPlayer="videoPlayer"
-          :videoPlayerEl="videoPlayerEl"
-          @requestFullScreen="requestFullScreen"
-          @exitFullScreen="exitFullScreen"
+          :is-full-screen="isFullScreen"
+          :video-el="video"
+          :video-player="videoPlayer"
+          :video-player-el="videoPlayerEl"
+          @request-full-screen="requestFullScreen"
+          @exit-full-screen="exitFullScreen"
         />
       </div>
-      <Barrage
+      <BarragePlayer
         v-if="videoPlayer"
-        :showBarrages="showBarrages"
-        :barrageInfo="barrageInfo"
-        :playerState="playerState"
-        :videoPlayer="videoPlayer"
+        :show-barrages="showBarrages"
+        :barrage-info="barrageInfo"
+        :player-state="playerState"
+        :video-player="videoPlayer"
       />
     </div>
     <div class="barrage-operator-area">
@@ -81,17 +81,16 @@
   </div>
 </template>
 <script setup>
-import { ref, watch, computed, onMounted, onUnmounted } from 'vue'
-import ControlBar from '@/components/VideoPlayer/ControlBar.vue'
-import Barrage from './Barrage.vue'
-import Rocket from './Rocket.vue'
-import { timestampToDate } from '@/utils/index'
-import { downloadFile } from '@/server/index'
-import eventBus from '@/eventBus'
-import initialize from './mse.js'
-import { useVideoPlayerStore } from '@/stores/videoplayer'
-import { storeToRefs } from 'pinia'
-import { load } from 'protobufjs'
+import { ref, watch, onMounted, onUnmounted } from 'vue';
+import ControlBar from '@/components/VideoPlayer/ControlBar.vue';
+import BarragePlayer from './BarragePlayer.vue';
+import Rocket from './Rocket.vue';
+import { timestampToDate } from '@/utils/index';
+// import { downloadFile } from '@/server/index';
+import eventBus from '@/eventBus';
+import initialize from './mse.js';
+import { useVideoPlayerStore } from '@/stores/videoplayer';
+import { storeToRefs } from 'pinia';
 
 const props = defineProps([
   'bvid',
@@ -99,33 +98,33 @@ const props = defineProps([
   'playConfig',
   'barrageInfo',
   'endPe',
-])
+]);
 
-const emit = defineEmits(['getBarrageFn'])
+const emit = defineEmits(['getBarrageFn']);
 
-const showBarrages = ref(true)
+const showBarrages = ref(true);
 
-const videoPlayerStore = useVideoPlayerStore()
+const videoPlayerStore = useVideoPlayerStore();
 const { status, controlBarState, tabFullscreen, pending } =
-  storeToRefs(videoPlayerStore)
+  storeToRefs(videoPlayerStore);
 
-const video = ref(null)
-const videoPlayerEl = ref(null)
-const videoPlayer = ref(null)
+const video = ref(null);
+const videoPlayerEl = ref(null);
+const videoPlayer = ref(null);
 const playerState = ref({
   currentTime: 0,
   duration: 99999,
-})
-const dashjs = window.dashjs
+});
+const dashjs = window.dashjs;
 
-const isFullScreen = ref(false)
+const isFullScreen = ref(false);
 function requestFullScreen() {
   // 拦截dahsjs的全屏操作，变成div全屏
   try {
-    videoPlayerEl.value.requestFullscreen()
-    isFullScreen.value = true
+    videoPlayerEl.value.requestFullscreen();
+    isFullScreen.value = true;
   } catch (e) {
-    console.log(e)
+    console.log(e);
   }
 }
 
@@ -136,77 +135,76 @@ function requestFullScreen() {
  */
 function exitFullScreen() {
   if (document.exitFullscreen) {
-    document.exitFullscreen()
+    document.exitFullscreen();
   } else if (document.mozCancelFullScreen) {
-    document.mozCancelFullScreen()
+    document.mozCancelFullScreen();
   } else if (document.webkitExitFullscreen) {
-    document.webkitExitFullscreen()
+    document.webkitExitFullscreen();
   }
-  isFullScreen.value = false
+  isFullScreen.value = false;
 }
 
 function keydownHandleFn(e) {
   // console.log(e)
   if (e.keyCode === 32) {
-    clickScreenFn()
+    clickScreenFn();
   } else if (e.keyCode === 70) {
-    const cb = isFullScreen.value ? exitFullScreen : requestFullScreen
-    cb()
-  } else if (e.keyCode === 77) {
+    const cb = isFullScreen.value ? exitFullScreen : requestFullScreen;
+    cb();
   }
 }
 
 onMounted(() => {
   const observer = new ResizeObserver(entries => {
-    const videoPlayerStore = useVideoPlayerStore()
+    const videoPlayerStore = useVideoPlayerStore();
     // 处理元素大小变化的逻辑
     // console.log(entries[0].contentRect.width)
-    videoPlayerStore.setPlayerWidth(entries[0].contentRect.width)
-  })
-  observer.observe(video.value)
-  document.addEventListener('keydown', keydownHandleFn)
-})
+    videoPlayerStore.setPlayerWidth(entries[0].contentRect.width);
+  });
+  observer.observe(video.value);
+  document.addEventListener('keydown', keydownHandleFn);
+});
 
 onUnmounted(() => {
-  hiddenControlbarTimer.value && clearTimeout(hiddenControlbarTimer.value)
-  document.removeEventListener('keydown', keydownHandleFn)
-})
+  if (hiddenControlbarTimer.value) clearTimeout(hiddenControlbarTimer.value);
+  document.removeEventListener('keydown', keydownHandleFn);
+});
 
-const controlBarEl = ref()
-const hiddenControlbarTimer = ref(null)
+const controlBarEl = ref();
+const hiddenControlbarTimer = ref(null);
 
 /** ControlBar */
 function setControlBarShow(flag, e) {
-  hiddenControlbarTimer.value && clearTimeout(hiddenControlbarTimer.value)
+  if (hiddenControlbarTimer.value) clearTimeout(hiddenControlbarTimer.value);
   videoPlayerStore.setContrilbarState({
     ...controlBarState.value,
     isShow: flag,
-  })
+  });
   // 不在ControlBar内时，3秒后隐藏
-  const isInControlBar = e && e.target && controlBarEl.value.contains(e.target)
+  const isInControlBar = e && e.target && controlBarEl.value.contains(e.target);
   if (flag && !isInControlBar) {
     hiddenControlbarTimer.value = setTimeout(() => {
       videoPlayerStore.setContrilbarState({
         ...controlBarState.value,
         isShow: false,
-      })
-    }, 3000)
+      });
+    }, 3000);
   }
 }
 
 function clickScreenFn() {
   if (status.value === 'playing') {
-    videoPlayer.value.pause()
+    videoPlayer.value.pause();
   } else if (['ready', 'paused'].includes(status.value)) {
-    videoPlayer.value.play()
+    videoPlayer.value.play();
   }
 }
 
 function getMpdInfo() {
-  const { dash, timeStamp } = props.playConfig
-  const { video, audio } = dash
-  console.log(video)
-  const baseUri = 'http://localhost:8080/api/'
+  const { dash, timeStamp } = props.playConfig;
+  const { video, audio } = dash;
+
+  const baseUri = 'http://localhost:8080/api/';
   const videoConfig = video
     .map((item, index) => ({
       baseUrl: '/api/video/playStream?mimeType=video&track='
@@ -218,7 +216,7 @@ function getMpdInfo() {
       frameRate: item.frameRate,
       codecs: item.codecs,
     }))
-    .filter(el => !el.codecs.includes('hev'))
+    .filter(el => !el.codecs.includes('hev'));
   const audioConfig = [
     {
       baseUrl: '/api/video/playStream?mimeType=audio&track=0'.concat(
@@ -227,76 +225,76 @@ function getMpdInfo() {
       bandwidth: audio[0].bandwidth,
       codecs: audio[0].codecs,
     },
-  ]
-  const { duration, minBufferTime } = dash
+  ];
+  const { duration, minBufferTime } = dash;
   return {
     baseUri,
     video: videoConfig,
     audio: audioConfig,
     duration,
     minBufferTime: minBufferTime,
-  }
+  };
 }
 
-function downloadFileFn() {
-  const { video, audio } = props.playConfig.dash
-  const formData = new FormData()
-  formData.set('video_url', video[0].baseUrl)
-  formData.set('audio_url', audio[0].baseUrl)
-  formData.set('title', props.baseInfo?.title)
-  formData.set('bvid', props.bvid)
-  downloadFile(formData).then(res => {
-    if (res.data === true) {
-      alert('下载成功！')
-    }
-  })
-}
+// function downloadFileFn() {
+//   const { video, audio } = props.playConfig.dash;
+//   const formData = new FormData();
+//   formData.set('video_url', video[0].baseUrl);
+//   formData.set('audio_url', audio[0].baseUrl);
+//   formData.set('title', props.baseInfo?.title);
+//   formData.set('bvid', props.bvid);
+//   downloadFile(formData).then(res => {
+//     if (res.data === true) {
+//       alert('下载成功！');
+//     }
+//   });
+// }
 
 function throttle(func, wait) {
-  let timer = null
+  let timer = null;
   return function () {
-    if (timer) return
+    if (timer) return;
     timer = setTimeout(() => {
-      func.apply(this, arguments)
-      timer = null
-    }, wait)
-  }
+      func.apply(this, arguments);
+      timer = null;
+    }, wait);
+  };
 }
 
 function bindEvents() {
   // 播放时间变化
   videoPlayer.value?.on(
     dashjs.MediaPlayer.events.PLAYBACK_TIME_UPDATED,
-    throttle(e => {
+    throttle(() => {
       // 这里的e包含当前播放时间信息
       // console.log(e)
-      const currentTime = videoPlayer.value.time() // 当前播放时间
+      const currentTime = videoPlayer.value.time(); // 当前播放时间
       if (currentTime >= props.endPe / 1000 - 2) {
-        emit('getBarrageFn', props.endPe, props.endPe + 120000)
+        emit('getBarrageFn', props.endPe, props.endPe + 120000);
       }
       // const seekableRange = e.seekableRange // 可寻址的播放时间范围
-      playerState.value.currentTime = currentTime
-      eventBus.emit('video_time_update', { time: currentTime })
+      playerState.value.currentTime = currentTime;
+      eventBus.emit('video_time_update', { time: currentTime });
     }, 1000),
-  )
+  );
 }
 
 function initPlayer() {
   if (videoPlayer.value) {
-    videoPlayer.value.destroy()
-    videoPlayer.value = null
+    videoPlayer.value.destroy();
+    videoPlayer.value = null;
   }
-  videoPlayerStore.setPending(true)
-  const mpdInfo = getMpdInfo()
+  videoPlayerStore.setPending(true);
+  const mpdInfo = getMpdInfo();
   videoPlayer.value = initialize(
     document.querySelector('#videoPlayer'),
     mpdInfo,
-  )
+  );
 
-  bindEvents()
+  bindEvents();
 }
 
-watch(() => props.playConfig, initPlayer)
+watch(() => props.playConfig, initPlayer);
 </script>
 <style lang="less" scoped>
 .hiddenCursor:hover {

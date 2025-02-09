@@ -1,9 +1,9 @@
 <template>
   <div
-    class="fixed-list-wrap"
-    @scroll="handleScrollFn"
     ref="fixedListWrap"
+    class="fixed-list-wrap"
     :style="{ height: `${containerHeight}px` }"
+    @scroll="handleScrollFn"
   >
     <slot name="header"> </slot>
     <slot name="empty"> </slot>
@@ -14,9 +14,9 @@
       }"
     >
       <div
-        class="single-item"
         v-for="item in showList"
         :key="item.id"
+        class="single-item"
         :style="{
           top: `${item.index * itemHeight}px`,
           height: `${itemHeight}px`,
@@ -29,13 +29,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { throttle } from '@/utils'
+import { ref, watch } from 'vue';
+import { throttle } from '@/utils';
 
 const props = defineProps({
   list: {
     type: Array,
-    default: [],
+    default: () => [],
   },
   itemHeight: {
     type: Number,
@@ -49,46 +49,48 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
-})
+});
 
-const totalHeight = ref(0)
-const fixedListWrap = ref(null)
-const showList = ref([])
+const totalHeight = ref(0);
+const fixedListWrap = ref(null);
+const showList = ref([]);
 
-function handleScroll(e) {
+function handleScroll() {
   //   console.log(fixedListWrap.value.scrollTop)
   //   console.log(fixedListWrap.value.offsetHeight)
-  let start = Math.floor(fixedListWrap.value.scrollTop / props.itemHeight)
+  let start = Math.floor(fixedListWrap.value.scrollTop / props.itemHeight);
   let end =
-    start + Math.ceil(props.containerHeight / props.itemHeight) + props.hashSize
-  start = Math.max(start - props.hashSize, 0)
+    start +
+    Math.ceil(props.containerHeight / props.itemHeight) +
+    props.hashSize;
+  start = Math.max(start - props.hashSize, 0);
   //   console.log(start, end)
-  showList.value = props.list.slice(start, end)
+  showList.value = props.list.slice(start, end);
 }
 
-const handleScrollFn = throttle(handleScroll, 50)
+const handleScrollFn = throttle(handleScroll, 50);
 
 function scrollToBottom() {
-  fixedListWrap.value.scrollTop = fixedListWrap.value.scrollHeight
+  fixedListWrap.value.scrollTop = fixedListWrap.value.scrollHeight;
 }
 
 function initialScroll(index) {
-  fixedListWrap.value.scrollTop = index * props.itemHeight
+  fixedListWrap.value.scrollTop = index * props.itemHeight;
 }
 
 defineExpose({
   fixedListWrap,
   scrollToBottom,
   initialScroll,
-})
+});
 
 watch(
   () => props.list,
   newVal => {
-    totalHeight.value = newVal.length * props.itemHeight
-    handleScroll()
+    totalHeight.value = newVal.length * props.itemHeight;
+    handleScroll();
   },
-)
+);
 </script>
 
 <style scoped>

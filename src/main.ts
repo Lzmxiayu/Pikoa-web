@@ -1,19 +1,18 @@
 // import './assets/main.css'
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import { Slider } from 'ant-design-vue'
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+import { Slider } from 'ant-design-vue';
 
-import App from './App.vue'
-import router from './router'
+import App from './App.vue';
+import router from './router';
 // import ArcoVueIcon from '@arco-design/web-vue/es/icon'
-import '@arco-design/web-vue/dist/arco.css'
-import mitt from 'mitt'
+import '@arco-design/web-vue/dist/arco.css';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia()).use(Slider)
+app.use(createPinia()).use(Slider);
 // .use(ArcoVueIcon)
-app.use(router)
+app.use(router);
 
-app.mount('#app')
+app.mount('#app');

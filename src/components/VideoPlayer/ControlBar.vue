@@ -1,8 +1,8 @@
 <template>
   <div class="control-bar-wrap">
     <div
-      class="scroll-bar-wrap"
       ref="scrollBarWrap"
+      class="scroll-bar-wrap"
       @mouseup="seekFn"
       @mousedown="beginDrag"
       @mousemove="moveDrag"
@@ -14,7 +14,7 @@
         class="scroll-bar-fragment-loaded"
         :style="{ width: `${fragementLoadedWidth}%` }"
       ></div>
-      <img class="preview-image" ref="previewImage" />
+      <img ref="previewImage" class="preview-image" />
     </div>
     <div class="icon-list">
       <div class="list-left">
@@ -44,7 +44,7 @@
           ></div>
           <icon-sound-fill style="color: #fff" size="26" @click="setMuteFn" />
           <div class="sound-slider">
-            <a-slider :style="{ width: '80px' }" v-model:model-value="volume" />
+            <a-slider v-model:model-value="volume" :style="{ width: '80px' }" />
             <!-- <a-slider v-model:value="volume" vertical /> -->
           </div>
         </div>
@@ -57,16 +57,16 @@
             style="position: absolute; top: -2px; right: -8px"
             size="12"
           />
-          <div class="quality-list" v-if="video_quality.length > 0">
+          <div v-if="video_quality.length > 0" class="quality-list">
             <div
               v-for="qualityItem in video_quality"
               :key="qualityItem.height"
               class="quality-list-item"
-              @click="changeQuality(qualityItem)"
               :class="{
                 selected:
                   current_quality.qualityIndex === qualityItem.qualityIndex,
               }"
+              @click="changeQuality(qualityItem)"
             >
               <span>{{ `${qualityItem.height}p` }}</span>
               <icon-plus
@@ -110,23 +110,14 @@
         </div>
       </div>
     </div>
-    <div class="biterate-tip" v-if="bitrateSwitching">
+    <div v-if="bitrateSwitching" class="biterate-tip">
       <span>{{ '切换清晰度' + toBitrate + '中...' }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import {
-  CaretRightOutlined,
-  PauseOutlined,
-  FullscreenOutlined,
-  FullscreenExitOutlined,
-  SoundFilled,
-  SettingFilled,
-  BorderOutlined,
-} from '@ant-design/icons-vue'
+import { ref, watch } from 'vue';
 import {
   IconCaretRight,
   IconPause,
@@ -135,49 +126,61 @@ import {
   IconFullscreenExit,
   IconSoundFill,
   IconPlus,
-} from '@arco-design/web-vue/es/icon'
-import { throttle, formatTime } from '@/utils/index'
-import { useVideoPlayerStore } from '@/stores/videoplayer'
-import { storeToRefs } from 'pinia'
-import { useVideoInfoStore } from '@/stores/videoInfo'
-import { getVideoshot } from '@/server'
-import { debounce } from '@/utils'
+} from '@arco-design/web-vue/es/icon';
+import { throttle, formatTime } from '@/utils/index';
+import { useVideoPlayerStore } from '@/stores/videoplayer';
+import { storeToRefs } from 'pinia';
+import { useVideoInfoStore } from '@/stores/videoInfo';
+import { getVideoshot } from '@/server';
+// import { debounce } from '@/utils';
 
-const props = defineProps([
-  'videoPlayer',
-  'videoPlayerEl',
-  'videoEl',
-  'isFullScreen',
-])
-const emit = defineEmits(['handleEmit', 'requestFullScreen', 'exitFullScreen'])
+const dashjs = window.dashjs;
 
-const scrollBarWrap = ref()
-const previewImage = ref(null)
-const imgEl = new Image()
+const props = defineProps({
+  videoPlayer: {
+    type: Object,
+    default: () => {},
+  },
+  videoPlayerEl: {
+    type: Object,
+    default: () => {},
+  },
+  videoEl: {
+    type: Object,
+    default: () => {},
+  },
+  isFullScreen: {
+    type: Boolean,
+    default: false,
+  },
+});
+const emit = defineEmits(['handleEmit', 'requestFullScreen', 'exitFullScreen']);
+
+const scrollBarWrap = ref();
+const previewImage = ref(null);
+const imgEl = new Image();
 let videoshotInfo = {
   indo: {},
   cache: {},
-}
+};
 
-const videoPlayerStore = useVideoPlayerStore()
+const videoPlayerStore = useVideoPlayerStore();
 const {
   status,
   duration,
   currentTime,
   volume,
   isMuted,
-  controlBarState,
   tabFullscreen,
-  pending,
   autoPlay,
-} = storeToRefs(videoPlayerStore)
+} = storeToRefs(videoPlayerStore);
 
-const videoInfoStore = useVideoInfoStore()
-const { baseInfo, playConfig } = storeToRefs(videoInfoStore)
+const videoInfoStore = useVideoInfoStore();
+const { baseInfo } = storeToRefs(videoInfoStore);
 
-const current_quality = ref('')
-const bitrateSwitching = ref(false)
-const toBitrate = ref('')
+const current_quality = ref('');
+const bitrateSwitching = ref(false);
+const toBitrate = ref('');
 
 // worker线程
 // let videoShotWorker = null
@@ -224,54 +227,54 @@ const toBitrate = ref('')
 // })
 
 /**清晰度 */
-const video_quality = ref([])
+const video_quality = ref([]);
 
 function changeQuality(item) {
-  if (!props.videoPlayer) return
-  const { qualityIndex } = item
-  bitrateSwitching.value = true
+  if (!props.videoPlayer) return;
+  const { qualityIndex } = item;
+  bitrateSwitching.value = true;
   // toBitrate.value = `${item.height}p`
-  props.videoPlayer.setQualityFor('video', qualityIndex, true)
+  props.videoPlayer.setQualityFor('video', qualityIndex, true);
 }
 
 /** 滚动条 */
-const scrollBarWidth = ref(0)
-const fragementLoadedWidth = ref(0)
-const isMovingScrollBar = ref(false)
+const scrollBarWidth = ref(0);
+const fragementLoadedWidth = ref(0);
+const isMovingScrollBar = ref(false);
 function seekFn(e) {
-  if (e.target && e.target.classList.contains('preview-image')) return
-  const val = (e.offsetX / e.target.offsetWidth).toFixed(2) * 100
-  videoPlayerStore.setPending(true)
+  if (e.target && e.target.classList.contains('preview-image')) return;
+  const val = (e.offsetX / e.target.offsetWidth).toFixed(2) * 100;
+  videoPlayerStore.setPending(true);
   // 跳到这里播放
   props.videoPlayer?.seek(
     Math.round((val / 100) * props.videoPlayer.duration()),
-  )
+  );
   if (props.videoPlayer.isPaused()) {
-    props.videoPlayer.play()
+    props.videoPlayer.play();
   }
-  scrollBarWidth.value = val
-  endDrag()
+  scrollBarWidth.value = val;
+  endDrag();
 }
 
-function beginDrag(e) {
-  isMovingScrollBar.value = true
+function beginDrag() {
+  isMovingScrollBar.value = true;
 }
 
 // const moveVideoShot = window.requestAnimationFrame(getAndRenderVideoShot) //debounce(getAndRenderVideoShot, 10)
 function moveDrag(e) {
   // moveVideoShot(e)
-  if (e.target && e.target.classList.contains('preview-image')) return
-  requestAnimationFrame(() => getAndRenderVideoShot(e))
-  if (!isMovingScrollBar.value) return
-  const val = (e.offsetX / e.target.offsetWidth).toFixed(2) * 100
-  scrollBarWidth.value = val
+  if (e.target && e.target.classList.contains('preview-image')) return;
+  requestAnimationFrame(() => getAndRenderVideoShot(e));
+  if (!isMovingScrollBar.value) return;
+  const val = (e.offsetX / e.target.offsetWidth).toFixed(2) * 100;
+  scrollBarWidth.value = val;
 }
 function endDrag() {
-  isMovingScrollBar.value = false
+  isMovingScrollBar.value = false;
 }
 
 function requestFullScreen() {
-  emit('requestFullScreen')
+  emit('requestFullScreen');
 }
 
 /**
@@ -280,22 +283,22 @@ function requestFullScreen() {
  * 仅在requestFullScreen之后有效
  */
 function exitFullScreen() {
-  emit('exitFullScreen')
+  emit('exitFullScreen');
 }
 
 function requestTabFullscreen() {
-  videoPlayerStore.setTabFullscreen(true)
+  videoPlayerStore.setTabFullscreen(true);
 }
 
 function exitTabFullscreen() {
-  videoPlayerStore.setTabFullscreen(false)
+  videoPlayerStore.setTabFullscreen(false);
 }
 
 function setMuteFn() {
-  if (!props.videoPlayer) return
-  const isMuted = props.videoPlayer.isMuted()
-  props.videoPlayer.setMute(!isMuted)
-  videoPlayerStore.setMute(!isMuted)
+  if (!props.videoPlayer) return;
+  const isMuted = props.videoPlayer.isMuted();
+  props.videoPlayer.setMute(!isMuted);
+  videoPlayerStore.setMute(!isMuted);
   // if (!isMuted) {
   //   videoPlayerStore.setVolume(0)
   // } else {
@@ -304,37 +307,37 @@ function setMuteFn() {
 }
 
 function setPicInPic() {
-  if (!props.videoEl) return
+  if (!props.videoEl) return;
   if (props.videoEl.requestPictureInPicture) {
-    props.videoEl.requestPictureInPicture()
+    props.videoEl.requestPictureInPicture();
   }
 }
 
 function transToBase64(left) {
-  const { info } = videoshotInfo
-  const perWidth = imgEl.width / (info.img_x_len || 10)
-  const perHeight = imgEl.height / (info.img_y_len || 10)
-  const barWidth = 240
+  const { info } = videoshotInfo;
+  const perWidth = imgEl.width / (info.img_x_len || 10);
+  const perHeight = imgEl.height / (info.img_y_len || 10);
+  const barWidth = 240;
   let translateX =
-    Math.floor(scrollBarWrap.value.offsetWidth * left) - barWidth / 2
+    Math.floor(scrollBarWrap.value.offsetWidth * left) - barWidth / 2;
   translateX =
     translateX > 0
       ? Math.min(
           translateX,
           Math.floor(scrollBarWrap.value.offsetWidth - barWidth),
         )
-      : 0
-  previewImage.value.style.transform = `translateX(${translateX}px)`
-  const time = Math.round(props.videoPlayer.duration() * Number(left))
-  const count = info.index.findIndex(val => val > time) - 1
-  const x = (count % info.img_x_len) - 1
-  const y = Math.floor(count / info.img_x_len)
-  const canvas = document.createElement('canvas')
-  canvas.width = perWidth
-  canvas.height = perHeight
+      : 0;
+  previewImage.value.style.transform = `translateX(${translateX}px)`;
+  const time = Math.round(props.videoPlayer.duration() * Number(left));
+  const count = info.index.findIndex(val => val > time) - 1;
+  const x = (count % info.img_x_len) - 1;
+  const y = Math.floor(count / info.img_x_len);
+  const canvas = document.createElement('canvas');
+  canvas.width = perWidth;
+  canvas.height = perHeight;
   if (videoshotInfo.cache[count]) {
-    previewImage.value.src = videoshotInfo.cache[count].src
-    return
+    previewImage.value.src = videoshotInfo.cache[count].src;
+    return;
   }
   canvas
     .getContext('2d')
@@ -348,156 +351,158 @@ function transToBase64(left) {
       0,
       perWidth,
       perHeight,
-    )
-  const base64 = canvas.toDataURL('image/jpeg')
-  const img = new Image()
-  img.src = base64
+    );
+  const base64 = canvas.toDataURL('image/jpeg');
+  const img = new Image();
+  img.src = base64;
   img.onload = () => {
-    previewImage.value.src = img.src
-    videoshotInfo.cache[count] = img
-  }
+    previewImage.value.src = img.src;
+    videoshotInfo.cache[count] = img;
+  };
 }
 
 async function initVdeioshotImage(cb) {
-  const { aid } = baseInfo.value
+  const { aid } = baseInfo.value;
   getVideoshot({ aid, index: 1 }).then(res => {
-    videoshotInfo.info = res
-    const { image } = res
-    imgEl.src = image[0].replace('i0.hdslb.com', 'localhost:8080')
-    imgEl.crossOrigin = 'anonymous'
+    videoshotInfo.info = res;
+    const { image } = res;
+    imgEl.src = image[0].replace('i0.hdslb.com', 'localhost:8080');
+    imgEl.crossOrigin = 'anonymous';
     imgEl.onload = () => {
-      cb && cb()
-    }
-  })
+      if (cb) cb();
+    };
+  });
 }
 function getAndRenderVideoShot(e) {
-  const left = (e.offsetX / e.target.offsetWidth).toFixed(2)
+  const left = (e.offsetX / e.target.offsetWidth).toFixed(2);
   if (imgEl.src) {
-    transToBase64(left)
-    return
+    transToBase64(left);
+    return;
   }
   initVdeioshotImage(() => {
-    transToBase64(left)
-  })
+    transToBase64(left);
+  });
 }
 
 function bindEvents() {
-  console.log('bindEvents', props.videoPlayer)
+  // console.log('bindEvents', props.videoPlayer);
 
   // 可以播放
   props.videoPlayer.on(dashjs.MediaPlayer.events.CAN_PLAY, () => {
-    console.log('canplay', props.videoPlayer)
-    videoPlayerStore.setPending(false)
+    // console.log('canplay', props.videoPlayer);
+    videoPlayerStore.setPending(false);
     videoPlayerStore.setDuration(
       formatTime(Math.ceil(props.videoPlayer.duration())),
-    )
-    props.videoPlayer.setVolume(Number((volume.value / 100).toFixed(2)))
-    videoPlayerStore.setStatus('ready')
-    video_quality.value = props.videoPlayer.getBitrateInfoListFor('video')
+    );
+    props.videoPlayer.setVolume(Number((volume.value / 100).toFixed(2)));
+    videoPlayerStore.setStatus('ready');
+    video_quality.value = props.videoPlayer.getBitrateInfoListFor('video');
     video_quality.value.forEach((item, index) => {
       if (
         index > 0 &&
         item.height === video_quality.value[index - 1].height &&
         item.bitrate > video_quality.value[index - 1].bitrate
       ) {
-        item.hb = true
+        item.hb = true;
       }
-    })
-    const curQuality = props.videoPlayer.getQualityFor('video')
+    });
+    const curQuality = props.videoPlayer.getQualityFor('video');
     current_quality.value = video_quality.value.find(
       item => item.qualityIndex === curQuality,
-    )
-    video_quality.value.reverse()
+    );
+    video_quality.value.reverse();
     if (autoPlay.value) {
-      props.videoPlayer.play()
+      props.videoPlayer.play();
     }
-  })
+  });
 
   // 开始播放
   props.videoPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_PLAYING, () => {
-    console.log('playing')
-    videoPlayerStore.setStatus('playing')
-  })
+    // console.log('playing');
+    videoPlayerStore.setStatus('playing');
+  });
 
   // 播放时间点变化
   props.videoPlayer?.on(
     dashjs.MediaPlayer.events.PLAYBACK_TIME_UPDATED,
-    throttle(e => {
+    throttle(() => {
       // 注意这里因为是节流,当seek时会与旧的e里的time冲突
-      const curTime = props.videoPlayer.time()
-      videoPlayerStore.setCurrentTime(formatTime(Math.ceil(curTime)))
+      const curTime = props.videoPlayer.time();
+      videoPlayerStore.setCurrentTime(formatTime(Math.ceil(curTime)));
       if (!isMovingScrollBar.value) {
         scrollBarWidth.value =
-          (curTime / props.videoPlayer.duration()).toFixed(2) * 100
+          (curTime / props.videoPlayer.duration()).toFixed(2) * 100;
       }
     }, 1000),
-  )
+  );
 
   // 播放暂停
   props.videoPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_PAUSED, () => {
-    console.log('paused')
-    videoPlayerStore.setStatus('paused')
-  })
+    // console.log('paused');
+    videoPlayerStore.setStatus('paused');
+  });
 
   // 跳转后触发
-  props.videoPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, e => {
-    console.log('seekend', props.videoPlayer.time())
-    videoPlayerStore.setPending(false)
-  })
+  props.videoPlayer.on(dashjs.MediaPlayer.events.PLAYBACK_SEEKED, () => {
+    // console.log('seekend', props.videoPlayer.time());
+    videoPlayerStore.setPending(false);
+  });
 
   props.videoPlayer.on(
     dashjs.MediaPlayer.events.FRAGMENT_LOADING_COMPLETED,
     e => {
       // console.log('FRAGMENT_LOADING_COMPLETED', e)
-      const fragmentLoaded = Math.ceil(e.request.startTime + e.request.duration)
+      const fragmentLoaded = Math.ceil(
+        e.request.startTime + e.request.duration,
+      );
       // console.log('fragmentLoaded', currentTime.value, fragmentLoaded)
       fragementLoadedWidth.value = Math.ceil(
         (fragmentLoaded / props.videoPlayer.duration()) * 100,
-      )
+      );
     },
-  )
+  );
   // 码率切换
   props.videoPlayer.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_RENDERED, e => {
-    console.log('QUALITY_CHANGE_RENDERED', e)
+    // console.log('QUALITY_CHANGE_RENDERED', e);
     if (e.newQuality !== e.oldQuality) {
       // 切换成功
-      const curQuality = props.videoPlayer.getQualityFor('video')
+      const curQuality = props.videoPlayer.getQualityFor('video');
       current_quality.value = video_quality.value.find(
         item => item.qualityIndex === curQuality,
-      )
-      bitrateSwitching.value = false
+      );
+      bitrateSwitching.value = false;
     }
-  })
+  });
 }
 
 watch(
   () => props.videoPlayer,
   () => {
-    bindEvents()
+    bindEvents();
   },
-)
+);
 watch(
   () => volume.value,
   newVal => {
-    if (!props.videoPlayer) return
-    const val = Number((newVal / 100).toFixed(2))
-    props.videoPlayer.setVolume(val)
+    if (!props.videoPlayer) return;
+    const val = Number((newVal / 100).toFixed(2));
+    props.videoPlayer.setVolume(val);
     if (val > 0) {
-      props.videoPlayer.setMute(false)
-      videoPlayerStore.setMute(false)
+      props.videoPlayer.setMute(false);
+      videoPlayerStore.setMute(false);
     }
   },
-)
+);
 watch(
   () => baseInfo.value,
   () => {
     // 清除缓存
     for (let i = 0; i < videoshotInfo.cache.length; i++) {
-      videoshotInfo.cache[i] = null
+      videoshotInfo.cache[i] = null;
     }
-    initVdeioshotImage()
+    initVdeioshotImage();
   },
-)
+);
 </script>
 
 <style lang="less" scoped>

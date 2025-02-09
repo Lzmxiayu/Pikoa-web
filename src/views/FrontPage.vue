@@ -67,16 +67,16 @@
   </div>
 </template>
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { IconRefresh } from '@arco-design/web-vue/es/icon'
-import { getFrontRecommendVideos } from '@/server'
-import Animation from '@/components/Animation/index.vue'
-import ResultItem from '@/components/SearchResult/ResultItem.vue'
+import { ref, computed, onMounted } from 'vue';
+import { IconRefresh } from '@arco-design/web-vue/es/icon';
+import { getFrontRecommendVideos } from '@/server';
+import Animation from '@/components/Animation/index.vue';
+import ResultItem from '@/components/SearchResult/ResultItem.vue';
 
-const rmcdVideos = ref([])
+const rmcdVideos = ref([]);
 async function getFrontRecommendVideosFn() {
-  const res = await getFrontRecommendVideos()
-  rmcdVideos.value = res.item
+  const res = await getFrontRecommendVideos();
+  rmcdVideos.value = res.item;
   rmcdVideos.value = (rmcdVideos.value || []).map(item => {
     return Object.assign({}, item, {
       danmaku: item.stat.danmaku,
@@ -86,22 +86,22 @@ async function getFrontRecommendVideosFn() {
         .replace('i2.hdslb.com', 'localhost:8080'),
       author: item.owner.name,
       play: item.stat.view,
-    })
-  })
-  console.log(res)
+    });
+  });
+  console.log(res);
 }
 
 const images = computed(() => {
-  return (rmcdVideos.value || []).map(item => item.pic)
-})
+  return (rmcdVideos.value || []).map(item => item.pic);
+});
 
 function jumpSearch(e) {
-  console.log(e.target.value)
-  window.open(`${window.location.origin}/search?keyword=${e.target.value}`)
+  console.log(e.target.value);
+  window.open(`${window.location.origin}/search?keyword=${e.target.value}`);
 }
 onMounted(async () => {
-  await getFrontRecommendVideosFn()
-})
+  await getFrontRecommendVideosFn();
+});
 </script>
 <style lang="less" scoped>
 .front_page {
