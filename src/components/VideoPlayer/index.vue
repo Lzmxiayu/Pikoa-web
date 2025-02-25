@@ -53,8 +53,10 @@
           :video-el="video"
           :video-player="videoPlayer"
           :video-player-el="videoPlayerEl"
+          :show-barrages="showBarrages"
           @request-full-screen="requestFullScreen"
           @exit-full-screen="exitFullScreen"
+          @handleShowBarrages="handleShowBarrages"
         />
       </div>
       <BarragePlayer
@@ -64,13 +66,6 @@
         :player-state="playerState"
         :video-player="videoPlayer"
       />
-    </div>
-    <div class="barrage-operator-area">
-      <!-- 弹幕操作区域 -->
-      <a-switch v-model="showBarrages">
-        <template #checked> 开启弹幕 </template>
-        <template #unchecked> 关闭弹幕 </template>
-      </a-switch>
     </div>
     <!-- <div class="description">
       <span>{{ baseInfo?.desc || '' }}</span>
@@ -103,6 +98,10 @@ const props = defineProps([
 const emit = defineEmits(['getBarrageFn']);
 
 const showBarrages = ref(true);
+
+function handleShowBarrages(flag) {
+  showBarrages.value = flag;
+}
 
 const videoPlayerStore = useVideoPlayerStore();
 const { status, controlBarState, tabFullscreen, pending } =
@@ -180,7 +179,7 @@ function setControlBarShow(flag, e) {
     ...controlBarState.value,
     isShow: flag,
   });
-  // 不在ControlBar内时，3秒后隐藏
+  // 不在ControlBar内时，5秒后隐藏
   const isInControlBar = e && e.target && controlBarEl.value.contains(e.target);
   if (flag && !isInControlBar) {
     hiddenControlbarTimer.value = setTimeout(() => {
@@ -188,7 +187,7 @@ function setControlBarShow(flag, e) {
         ...controlBarState.value,
         isShow: false,
       });
-    }, 3000);
+    }, 5000);
   }
 }
 
@@ -203,7 +202,7 @@ function clickScreenFn() {
 function getMpdInfo() {
   const { dash, timeStamp } = props.playConfig;
   const { video, audio } = dash;
-
+  console.log('video', video);
   const baseUri = 'http://localhost:8080/api/';
   const videoConfig = video
     .map((item, index) => ({
@@ -215,6 +214,7 @@ function getMpdInfo() {
       width: item.width,
       frameRate: item.frameRate,
       codecs: item.codecs,
+      SegmentBase: item.SegmentBase,
     }))
     .filter(el => !el.codecs.includes('hev'));
   const audioConfig = [
@@ -224,6 +224,41 @@ function getMpdInfo() {
       ),
       bandwidth: audio[0].bandwidth,
       codecs: audio[0].codecs,
+      SegmentBase: audio[0].SegmentBase,
+    },
+  ];
+  const { duration, minBufferTime } = dash;
+  return {
+    baseUri,
+    video: videoConfig,
+    audio: audioConfig,
+    duration,
+    minBufferTime: minBufferTime,
+  };
+}
+
+function getLocalMpdInfo() {
+  const { dash } = props.playConfig;
+  const { video, audio } = dash;
+
+  const baseUri = 'http://localhost:8080/api/';
+  const videoConfig = video
+    .map(item => ({
+      baseUrl: item.baseUrl,
+      bandwidth: item.bandwidth,
+      height: item.height,
+      width: item.width,
+      frameRate: item.frameRate,
+      codecs: item.codecs,
+      SegmentBase: item.SegmentBase,
+    }))
+    .filter(el => !el.codecs.includes('hev'));
+  const audioConfig = [
+    {
+      baseUrl: audio[0].baseUrl,
+      bandwidth: audio[0].bandwidth,
+      codecs: audio[0].codecs,
+      SegmentBase: audio[0].SegmentBase,
     },
   ];
   const { duration, minBufferTime } = dash;
@@ -286,10 +321,12 @@ function initPlayer() {
   }
   videoPlayerStore.setPending(true);
   const mpdInfo = getMpdInfo();
+  // const mpdInfo = getLocalMpdInfo();
   videoPlayer.value = initialize(
     document.querySelector('#videoPlayer'),
     mpdInfo,
   );
+  window.videoPlayer = videoPlayer.value;
 
   bindEvents();
 }
@@ -380,14 +417,6 @@ watch(() => props.playConfig, initPlayer);
     color: #4f4f4f;
     margin-right: 8px;
   }
-}
-.barrage-operator-area {
-  display: flex;
-  height: 80px;
-  align-items: center;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  border: 1px solid #4f4f4f;
 }
 .description {
   width: 95%;

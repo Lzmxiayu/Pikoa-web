@@ -1,5 +1,5 @@
 <template>
-  <div class="video-desc">
+  <div v-if="baseInfo?.desc" class="video-desc">
     <!-- <h1>{{ baseInfo?.title || '' }}</h1> -->
     <!-- <div class="header-info-desc">
       <span>{{
@@ -14,15 +14,14 @@
           : ' '
       }}</span>
     </div> -->
-    <div class="description">
-      <!-- <br /> -->
-      <span>{{ baseInfo?.desc || '' }}</span>
-    </div>
+    <!-- <div class="description"> -->
+    <!-- <br /> -->
+    <span>{{ baseInfo?.desc || '' }}</span>
+    <!-- </div> -->
   </div>
 </template>
 <script setup>
-import { timestampToDate } from '@/utils/index';
-const props = defineProps(['baseInfo']);
+defineProps(['baseInfo']);
 </script>
 
 <style lang="less" scoped>
@@ -31,10 +30,16 @@ const props = defineProps(['baseInfo']);
   height: 100%;
   padding: 0 16px;
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  border: 1px #000 dashed;
   h1 {
     margin: 0;
     margin-bottom: 10px;
     line-height: 1.2;
+  }
+  span {
+    overflow: hidden;
   }
 }
 .header-info-desc {

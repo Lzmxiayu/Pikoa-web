@@ -12,7 +12,7 @@
         @click="handleVideoItemClick(item)"
       >
         <img :alt="item.title" :src="processPic(item.pic)" />
-        <h3>{{ item.title }}</h3>
+        <p :title="item.title">{{ item.title }}</p>
 
         <!-- <div>
         </div> -->
@@ -74,13 +74,23 @@ watch(
     // left: 0;
     aspect-ratio: 16/9;
     border-radius: 6px;
-    width: 248px;
-    height: 140px;
+    width: 160px;
+    height: 90px;
   }
-  h3 {
+  p {
     margin: 0px 10px;
     // position: absolute;
     // top: 0;
+    max-height: 78px;
+    font-size: 15px;
+    line-height: 26px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-break: anywhere;
+    word-break: break-all;
     &:hover {
       color: rgb(87, 146, 255);
     }
@@ -93,12 +103,24 @@ watch(
 
 @media screen and(max-width: 1920px) {
   .related-item {
-    height: 140px;
+    height: 90px;
     img {
-      width: 248px;
-      height: 140px;
+      width: 160px;
+      height: 90px;
     }
-    h3 {
+    p {
+      left: 255px;
+    }
+  }
+}
+@media screen and(max-width: 2560px) {
+  .related-item {
+    height: 108px;
+    img {
+      width: 192px;
+      height: 108px;
+    }
+    p {
       left: 255px;
     }
   }

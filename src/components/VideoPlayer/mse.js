@@ -41,9 +41,15 @@ const createParsedMpd = ({
                   'urn:mpeg:dash:23003:3:audio_channel_configuration:2011',
                 value: '2',
               },
+              // SegmentBase: {
+              //   Initialization: {
+              //     range: item.SegmentBase.Initialization,
+              //   },
+              //   indexRange: item.SegmentBase.indexRange,
+              // },
             })),
             // "audioSamplingRate": 48000,
-            codecs: audio.codecs,
+            // codecs: [0].codecs,
             contentType: 'audio',
             group: 2,
             id: 2,
@@ -106,6 +112,12 @@ const createParsedMpd = ({
               mimeType: 'video/mp4',
               codecs: item.codecs,
               maximumSAPPeriod: 5,
+              // SegmentBase: {
+              //   Initialization: {
+              //     range: item.SegmentBase.Initialization,
+              //   },
+              //   indexRange: item.SegmentBase.indexRange,
+              // },
             })),
             contentType: 'video',
             // codecs: video.codecs,
@@ -138,14 +150,18 @@ function initialize(videoEl, mpdInfo) {
   player.updateSettings({
     streaming: {
       abr: {
-        // initialBitrate: { audio: -1, video: 800 },
+        initialBitrate: { audio: -1, video: 2000 },
         autoSwitchBitrate: { audio: true, video: false },
+        // fragmentsToKeep: 1,
       },
     },
   });
   player.initialize(videoEl, null, false);
   player.attachSource(parsedManifest);
-  // player.setQualityFor('video', 0)
+  player.setInitialMediaSettingsFor('video', {
+    index: 1,
+  });
+  // player.setQualityFor('video', 2);
   // const controlbar = new ControlBar(player);
   // controlbar.initialize();
   // player.play();

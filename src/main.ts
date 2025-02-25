@@ -2,7 +2,7 @@
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
-import { Slider } from 'ant-design-vue';
+import { Message } from '@arco-design/web-vue';
 
 import App from './App.vue';
 import router from './router';
@@ -11,7 +11,9 @@ import '@arco-design/web-vue/dist/arco.css';
 
 const app = createApp(App);
 
-app.use(createPinia()).use(Slider);
+Message._context = app._context;
+
+app.use(createPinia());
 // .use(ArcoVueIcon)
 app.use(router);
 

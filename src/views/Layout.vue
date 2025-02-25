@@ -1,10 +1,9 @@
 <template>
   <div class="front_page">
     <a-layout>
-      <a-layout-sider :width="220">
-        <div class="moon_beach">
+      <a-layout-sider :width="70">
+        <div class="pikoa">
           <div class="logo"></div>
-          MoonBeach
         </div>
         <a-menu
           :default-open-keys="['1']"
@@ -13,27 +12,27 @@
         >
           <a-menu-item key="home">
             <icon-home size="24" />
-            主页
+            <!-- 主页 -->
           </a-menu-item>
           <a-menu-item key="search">
             <icon-search size="24" />
-            搜索
+            <!-- 搜索 -->
           </a-menu-item>
           <a-menu-item key="history">
             <icon-history size="24" />
-            历史
+            <!-- 历史 -->
           </a-menu-item>
           <a-menu-item key="create">
             <icon-upload size="24" />
-            创作
+            <!-- 创作 -->
           </a-menu-item>
           <a-menu-item key="space">
             <icon-cloud size="24" />
-            空间
+            <!-- 空间 -->
           </a-menu-item>
           <a-menu-item key="care">
             <icon-select-all size="24" />
-            关注
+            <!-- 关注 -->
           </a-menu-item>
         </a-menu>
       </a-layout-sider>
@@ -81,6 +80,12 @@ function onClickMenuItem(key) {
   // padding: auto;
   display: flex;
   align-items: center;
+  padding: 0 !important;
+  display: flex;
+  justify-content: center;
+  .arco-icon {
+    margin: 0 !important;
+  }
 }
 :deep(.arco-menu-collapsed .arco-menu-pop) {
   :deep(.arco-menu-item) {
@@ -88,16 +93,14 @@ function onClickMenuItem(key) {
   }
 }
 
-.moon_beach {
-  width: 100;
+.pikoa {
   height: 100px;
   display: flex;
   align-items: center;
   padding: 10px;
   .logo {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
+    width: 60px;
+    height: 60px;
     background: url('@/assets/images/mu.png') no-repeat center/contain;
   }
   font-size: 18px;

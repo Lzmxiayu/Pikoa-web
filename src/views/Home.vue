@@ -1,5 +1,5 @@
 <template>
-  <div class="front_page">
+  <div class="home" ref="homeEl">
     <a-layout style="height: 100vh">
       <a-layout-header
         style="
@@ -20,8 +20,8 @@
           placeholder="输入搜索内容"
           search-button
           @press-enter="jumpSearch"
-          @search="jumpSearch"
         />
+        <!-- @search="jumpSearch" -->
       </a-layout-header>
       <a-layout-content>
         <div class="main-content">
@@ -33,21 +33,29 @@
             >
               <ResultItem :item="item" />
             </div>
-            <a-button
-              v-if="rmcdVideos?.length > 0"
-              class="another_button"
-              @click="getFrontRecommendVideosFn"
-            >
-              <template #icon>
-                <icon-refresh />
-              </template>
-            </a-button>
           </div>
+
+          <a-button
+            v-if="rmcdVideos?.length > 0"
+            class="fresh_button"
+            size="large"
+            @click="getFrontRecommendVideosFn"
+          >
+            <template #icon>
+              <icon-refresh />
+            </template>
+          </a-button>
+
+          <a-button class="top_button" size="large" @click="scrollToTop">
+            <template #icon>
+              <icon-to-top />
+            </template>
+          </a-button>
         </div>
       </a-layout-content>
       <a-layout-footer style="height: 40px"
         ><span :style="{ color: '#6d6d6d', textAlign: 'center' }"
-          >Moon_Beach</span
+          >Pikoa</span
         ></a-layout-footer
       >
     </a-layout>
@@ -55,7 +63,7 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { IconRefresh } from '@arco-design/web-vue/es/icon';
+import { IconToTop, IconRefresh } from '@arco-design/web-vue/es/icon';
 import { getFrontRecommendVideos } from '@/server';
 import ResultItem from '@/components/SearchResult/ResultItem.vue';
 
@@ -66,6 +74,11 @@ interface Video {
   author: string;
   play: number;
   danmaku: number;
+}
+
+const homeEl = ref<HTMLElement | null>(null);
+function scrollToTop() {
+  homeEl.value?.scrollTo(0, 0);
 }
 
 const rmcdVideos = ref<Video[]>([]);
@@ -101,21 +114,26 @@ onMounted(async () => {
 });
 </script>
 <style lang="less" scoped>
-.front_page {
+.home {
   width: 100vw;
   height: 100vh;
+  padding: 0 80px;
   overflow: auto;
 }
-.front_page :deep(.arco-layout-header),
-.front_page :deep(.arco-layout-footer),
-.front_page :deep(.arco-layout-sider-children),
-.front_page :deep(.arco-layout-content) {
+.home :deep(.arco-layout-header),
+.home :deep(.arco-layout-footer),
+.home :deep(.arco-layout-sider-children),
+.home :deep(.arco-layout-content) {
   display: flex;
   flex-direction: column;
   font-size: 16px;
 }
-.front_page :deep(.arco-layout-header) {
+.home :deep(.arco-layout-header) {
   margin-bottom: 40px;
+}
+
+.main-content {
+  position: relative;
 }
 
 .rcmd_area {
@@ -137,13 +155,26 @@ onMounted(async () => {
   &_item {
     padding: 0 10px 10px 10px;
   }
-  .another_button {
-    position: absolute;
-    top: 0;
-    right: -40px;
-    border-radius: 4px;
-  }
   margin-bottom: 60px;
+}
+
+:deep(.arco-btn-size-large.arco-btn-only-icon) {
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+}
+.top_button {
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
+  border-radius: 4px;
+}
+
+.fresh_button {
+  position: fixed;
+  bottom: 120px;
+  right: 30px;
+  border-radius: 4px;
 }
 
 @media screen and(max-width: 1300px) {

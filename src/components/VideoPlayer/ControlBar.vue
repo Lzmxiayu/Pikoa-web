@@ -53,7 +53,7 @@
         <div class="quality-option">
           <span>{{ current_quality ? `${current_quality.height}p` : '' }}</span>
           <icon-plus
-            v-if="current_quality.hb"
+            v-if="current_quality?.hb"
             style="position: absolute; top: -2px; right: -8px"
             size="12"
           />
@@ -76,6 +76,14 @@
               />
             </div>
           </div>
+        </div>
+
+        <div class="barrage-operator-area">
+          <!-- 弹幕操作区域 -->
+          <a-switch v-model="showBarragesLocal" @click="handleShowBarrages">
+            <template #checked> 弹幕 </template>
+            <template #unchecked> 弹幕 </template>
+          </a-switch>
         </div>
 
         <div class="setting">
@@ -153,8 +161,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  showBarrages: {
+    type: Boolean,
+    default: true,
+  },
 });
-const emit = defineEmits(['handleEmit', 'requestFullScreen', 'exitFullScreen']);
+const emit = defineEmits([
+  'handleEmit',
+  'requestFullScreen',
+  'exitFullScreen',
+  'handleShowBarrages',
+]);
 
 const scrollBarWrap = ref();
 const previewImage = ref(null);
@@ -234,7 +251,7 @@ function changeQuality(item) {
   const { qualityIndex } = item;
   bitrateSwitching.value = true;
   // toBitrate.value = `${item.height}p`
-  props.videoPlayer.setQualityFor('video', qualityIndex, true);
+  props.videoPlayer.setQualityFor('video', qualityIndex); //, true);
 }
 
 /** 滚动条 */
@@ -406,10 +423,12 @@ function bindEvents() {
         item.hb = true;
       }
     });
-    const curQuality = props.videoPlayer.getQualityFor('video');
-    current_quality.value = video_quality.value.find(
-      item => item.qualityIndex === curQuality,
-    );
+    // const curQuality = props.videoPlayer.getQualityFor('video');
+    current_quality.value = video_quality.value[video_quality.value.length - 1];
+    //video_quality.value.find(
+    //   item => item.qualityIndex === curQuality,
+    // );
+    console.log('current_quality.value', current_quality.value, video_quality);
     video_quality.value.reverse();
     if (autoPlay.value) {
       props.videoPlayer.play();
@@ -463,10 +482,10 @@ function bindEvents() {
   );
   // 码率切换
   props.videoPlayer.on(dashjs.MediaPlayer.events.QUALITY_CHANGE_RENDERED, e => {
-    // console.log('QUALITY_CHANGE_RENDERED', e);
-    if (e.newQuality !== e.oldQuality) {
+    console.log('QUALITY_CHANGE_RENDERED', e, e.newQuality);
+    if (e.mediaType === 'video' && e.newQuality !== e.oldQuality) {
       // 切换成功
-      const curQuality = props.videoPlayer.getQualityFor('video');
+      const curQuality = e.newQuality; //props.videoPlayer.getQualityFor('video');
       current_quality.value = video_quality.value.find(
         item => item.qualityIndex === curQuality,
       );
@@ -503,6 +522,15 @@ watch(
     initVdeioshotImage();
   },
 );
+
+/** 弹幕开关 */
+const showBarragesLocal = ref(props.showBarrages);
+function handleShowBarrages(e) {
+  const next = !props.showBarrages;
+  emit('handleShowBarrages', next);
+  showBarragesLocal.value = next;
+  console.log(next);
+}
 </script>
 
 <style lang="less" scoped>
@@ -687,6 +715,13 @@ watch(
   :where(.css-dev-only-do-not-override-1p3hq3p).ant-slider-vertical {
     margin: 0 11px;
   }
+}
+
+.barrage-operator-area {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  margin-right: 15px;
 }
 .quality-option {
   margin-right: 15px;
