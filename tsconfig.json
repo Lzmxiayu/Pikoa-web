@@ -1,24 +1,21 @@
 {
-  "files": [],
   "compilerOptions": {
-    "baseUrl": "./", // 设置基准目录
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
+    "sourceMap": false,
     "resolveJsonModule": true,
-    "composite": true,
+    "lib": ["ESNext", "DOM"],
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"] // 设置别名
-    },
-    "include": [
-      "env.d.ts",
-      "src/**/*",
-      "src/**/*.vue",
-      "src/**/*.js",
-      "src/utils/*"
-    ]
-  }
+      "@/*": ["src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": ["node_modules"]
 }
