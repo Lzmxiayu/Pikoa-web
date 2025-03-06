@@ -31,11 +31,10 @@
       <!-- <icon-delete size="24" class="deleteIcon" /> -->
     </div>
     <div class="last_line">
-      <span class="author" @click="jumpSpace(item)">{{
-        item?.['author_name']
-      }}</span>
-      <span class="view_at"
-        ><icon-live-broadcast size="18" />{{ view_at }}</span
+      <!-- <span class="author">{{ item?.['author_name'] }}</span> -->
+      <span class="view_at">
+        <!-- <icon-live-broadcast size="18" /> -->
+        {{ view_at }}</span
       >
     </div>
   </template>
@@ -53,17 +52,18 @@ const props = defineProps(['item']);
 const isloading = ref(true);
 
 const view_time = computed(() => {
-  if (!props.item?.['progress'] || !props.item?.['duration'])
-    return '00:00/00:00';
-  const duration = formatTime(props.item?.['duration'] || 0);
-  if (props?.item?.['progress'] === -1) return `${duration}/${duration}`;
-  return formatTime(props.item?.['progress'] || 0) + '/' + duration;
+  return props.item?.['length'] || '';
+  //   if (!props.item?.['progress'] || !props.item?.['duration'])
+  //     return '00:00/00:00';
+  //   const duration = formatTime(props.item?.['duration'] || 0);
+  //   if (props?.item?.['progress'] === -1) return `${duration}/${duration}`;
+  //   return formatTime(props.item?.['progress'] || 0) + '/' + duration;
 });
 
 const view_at = computed(() => {
-  if (!props.item?.['timeObj']) return;
-  const { month, day, hour, minute } = props.item?.['timeObj'] || {};
-  return `${month}-${day} ${hour}:${minute}`;
+  if (!props.item?.['timeObj']) return '';
+  //   const { month, day, hour, minute } = props.item?.['timeObj'] || {};
+  return props.item?.['timeObj']; //`${month}-${day} ${hour}:${minute}`;
 });
 
 const scrollBarWidth = computed(() => {
@@ -77,14 +77,10 @@ function endLoading() {
 }
 
 function jumpVideo(item) {
-  window.open(`${window.location.origin}/video?bvid=${item.history.bvid}`);
+  window.open(`${window.location.origin}/video?bvid=${item.bvid}`);
   // router.push({
   //   name: 'video',
   // })
-}
-
-function jumpSpace(item) {
-  window.open(`${window.location.origin}/space?mid=${item.author_mid}`);
 }
 </script>
 
@@ -199,7 +195,6 @@ video {
 }
 .author:hover {
   cursor: pointer;
-  color: #00aeec;
 }
 .view_at {
   display: flex;

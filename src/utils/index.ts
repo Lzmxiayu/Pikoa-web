@@ -30,8 +30,8 @@ export function timestampToDate2(timestamp: string | number | Date) {
   const day = date.getDate().toString().padStart(2, '0');
   const hour = date.getHours().toString().padStart(2, '0');
   const minute = date.getMinutes().toString().padStart(2, '0');
-  const second = date.getSeconds().toString().padStart(2, '0');
-  const ampm = date.getHours() < 12 ? 'AM' : 'PM';
+  // const second = date.getSeconds().toString().padStart(2, '0');
+  // const ampm = date.getHours() < 12 ? 'AM' : 'PM';
 
   return `${year}-${month}-${day} ${hour}:${minute}`;
 }

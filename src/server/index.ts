@@ -114,3 +114,19 @@ export const uploadVideoMerge = async (params?: any) =>
     params,
     config: undefined,
   });
+
+export const getUserInfo = async (params?: any) =>
+  Service({
+    url: '/api/channel/info',
+    method: 'GET',
+    params,
+    config: undefined,
+  });
+
+export const searchSpaceDetail = async (params?: any) =>
+  Service({
+    url: '/api/channel/search',
+    method: 'GET',
+    params,
+    config: undefined,
+  });

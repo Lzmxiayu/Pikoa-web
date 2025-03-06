@@ -38,7 +38,7 @@
       @click="jumpVideo(item)"
       v-html="item?.['title']"
     ></h3>
-    <span class="author">{{ item?.['author'] }}</span>
+    <span class="author" @click="jumpSpace(item)">{{ item?.['author'] }}</span>
   </template>
   <template v-else>
     <a-skeleton-line rows="3" line-spacing="4" />
@@ -79,6 +79,9 @@ function jumpVideo(item) {
   // })
 }
 
+function jumpSpace(item) {
+  window.open(`${window.location.origin}/space?mid=${item.owner?.mid}`);
+}
 function getMpdInfo() {
   const { dash, timeStamp } = playConfig.value;
   if (!dash) return;
@@ -255,6 +258,7 @@ video {
   line-height: 20px;
   &:hover {
     cursor: pointer;
+    color: #00aeec;
   }
 }
 </style>

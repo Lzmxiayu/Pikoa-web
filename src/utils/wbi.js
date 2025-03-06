@@ -8,6 +8,7 @@ const mixinKeyEncTab = [
 ];
 let web_keys;
 export async function init() {
+  if (web_keys) return;
   web_keys = await getWbiKeys();
   // console.log('web_keys', web_keys)
 }

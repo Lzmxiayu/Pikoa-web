@@ -57,10 +57,7 @@ async function getViewedHistory(params: {
 }) {
   const res: any = await getViewHistory(params);
   res.list.forEach((item: any) => {
-    item.cover = item.cover
-      .replace('i1.hdslb.com', 'localhost:8080')
-      .replace('i0.hdslb.com', 'localhost:8080')
-      .replace('i2.hdslb.com', 'localhost:8080');
+    item.cover = item.cover.replace(/i(0|1|2).hdslb.com/, 'localhost:8080');
     item.timeObj = timestampToDateObj(item.view_at * 1000);
   });
   historyList.value = historyList.value.concat(res.list);
