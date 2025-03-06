@@ -194,7 +194,7 @@ onMounted(() => {
 
 .single-comment-content-title {
   font-size: 16px;
-  color: #61666d;
+  color: var(--user-title);
   margin-bottom: 10px;
 }
 .single-comment-content-text {
@@ -203,7 +203,7 @@ onMounted(() => {
 }
 
 .single-comment-content-info {
-  color: #9499a0;
+  color: var(--font-color2);
   font-size: 14px;
   /* padding: 0 10px; */
   display: flex;

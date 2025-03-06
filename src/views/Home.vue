@@ -1,16 +1,10 @@
 <template>
   <div class="home" ref="homeEl">
     <a-layout style="height: 100vh">
-      <a-layout-header
-        style="
-          height: 100px;
-          position: sticky;
-          top: 0;
-          z-index: 100;
-          background-color: #fff;
-        "
-      >
-        <a-input-search
+      <!-- <a-layout-header
+        style="height: 100px; position: sticky; top: 0; z-index: 100"
+      > -->
+      <!-- <a-input-search
           :style="{
             width: '450px',
             position: 'absolute',
@@ -20,9 +14,9 @@
           placeholder="输入搜索内容"
           search-button
           @press-enter="jumpSearch"
-        />
-        <!-- @search="jumpSearch" -->
-      </a-layout-header>
+        /> -->
+      <!-- @search="jumpSearch" -->
+      <!-- </a-layout-header> -->
       <a-layout-content>
         <div class="main-content">
           <div class="rcmd_area">
@@ -134,6 +128,7 @@ onMounted(async () => {
 
 .main-content {
   position: relative;
+  padding: 50px;
 }
 
 .rcmd_area {
@@ -195,7 +190,7 @@ onMounted(async () => {
     padding: 0 70px;
   }
 }
-@media screen and(min-width: 1920px) {
+@media screen and(min-width: 2560px) {
   .main-content {
     padding: 0 100px;
   }

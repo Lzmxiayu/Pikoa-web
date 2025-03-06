@@ -235,6 +235,9 @@ input {
   height: calc(100vh - 80px);
 } */
 
+:deep(.arco-tabs-nav-type-line .arco-tabs-tab-title) {
+  color: var(--font-color);
+}
 @media screen and (min-width: 1930px) {
   .video-player-area {
     width: calc(100% - 400px - 40px);

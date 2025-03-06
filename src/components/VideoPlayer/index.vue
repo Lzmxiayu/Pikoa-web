@@ -414,7 +414,7 @@ watch(() => props.playConfig, initPlayer);
     text-overflow: ellipsis;
   }
   span {
-    color: #4f4f4f;
+    color: var(--font-color2);
     margin-right: 8px;
   }
 }

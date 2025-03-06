@@ -1,0 +1,17 @@
+body[theme='dark'] {
+  --background-color: #121415;
+  --background-color1: #0f0f0f;
+
+  --font-color: #fffff9;
+  --font-color2: #9499a0;
+
+  --bg-color: #1a1e20;
+
+  --user-title: #e76a8e;
+}
+
+html,
+body {
+  background-color: var(--background-color);
+  color: var(--font-color);
+}

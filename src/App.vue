@@ -6,4 +6,3 @@ import Layout from './views/Layout.vue';
 <template>
   <Layout />
 </template>
-<style scoped></style>

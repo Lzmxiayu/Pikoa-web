@@ -45,7 +45,7 @@
   </template>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 import { IconLiveBroadcast, IconDice } from '@arco-design/web-vue/es/icon';
 import { getVideoView, getPlayList } from '@/server';
 import initialize from '@/components/videoPlayer/mse.js';
@@ -96,20 +96,14 @@ function getMpdInfo() {
     width: item.width,
     frameRate: item.frameRate,
     codecs: item.codecs,
+    // SegmentBase: item.SegmentBase,
   }));
 
-  const audioConfig = [
-    // {
-    //   baseUrl: '/api/video/playStream?mimeType=audio&track=0',
-    //   bandwidth: audio[0].bandwidth,
-    //   codecs: audio[0].codecs,
-    // },
-  ];
   const { duration, minBufferTime } = dash;
   return {
     baseUri,
     video: videoConfig,
-    audio: audioConfig,
+    audio: [],
     duration,
     minBufferTime: minBufferTime,
   };
@@ -120,12 +114,13 @@ function initPlayer() {
   videoPlayer.value = initialize(video.value, mpdInfo);
   videoPlayer.value.on(dashjs.MediaPlayer.events.CAN_PLAY, () => {
     videoPlayer.value.setMute(true);
+    isPreViewing.value = true;
     if (isPreViewing.value) videoPlayer.value.play();
   });
 }
 
 async function getPlayConfig() {
-  const { bvid, aid, cid } = baseInfo.value;
+  const { bvid = props.item.bvid, aid, cid = props.item.cid } = baseInfo.value;
   playConfig.value = await getPlayList({ bvid, avid: aid, cid });
 }
 
@@ -136,7 +131,9 @@ async function getBaseInfo(params) {
 
 async function getInfo() {
   // console.log(props.item);
-  await getBaseInfo({ bvid: props.item.bvid });
+  if (!props.item.cid) {
+    await getBaseInfo({ bvid: props.item.bvid });
+  }
   await getPlayConfig();
   // getBarrageFn()
 }
@@ -147,7 +144,7 @@ async function previewVideo() {
     videoPlayer.value.play();
     return;
   }
-  isPreViewing.value = true;
+  // isPreViewing.value = true;
   await getInfo();
   initPlayer();
 }
@@ -158,6 +155,9 @@ function exitPreview() {
     videoPlayer.value.pause();
   }
 }
+onBeforeUnmount(() => {
+  videoPlayer.value?.destroy();
+});
 </script>
 
 <style lang="less" scoped>
@@ -250,7 +250,7 @@ video {
 
 .author {
   text-align: start;
-  color: #6d6d6d;
+  color: var(--font-color2);
   font-size: 14px;
   line-height: 20px;
   &:hover {

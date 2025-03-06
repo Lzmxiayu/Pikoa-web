@@ -187,7 +187,7 @@ video {
 .author,
 .view_at {
   text-align: start;
-  color: #6d6d6d;
+  color: var(--font-color2);
   font-size: 14px;
   line-height: 20px;
 }

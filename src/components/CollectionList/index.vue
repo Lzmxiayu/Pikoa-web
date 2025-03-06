@@ -102,7 +102,7 @@ onMounted(() => {});
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #f8f8f8;
+  background: var(--bg-color);
   border-radius: 8px;
   padding: 10px 0 15px 0;
 }

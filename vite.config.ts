@@ -5,8 +5,8 @@ import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
 import { ArcoResolver } from 'unplugin-vue-components/resolvers';
 import { resolve } from 'node:path';
+import { visualizer } from 'rollup-plugin-visualizer';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     Vue(),
@@ -20,6 +20,10 @@ export default defineConfig({
           sideEffect: true,
         }),
       ],
+    }),
+    visualizer({
+      filename: './dist/stats.html',
+      title: 'Bundle Visualizer',
     }),
   ],
   resolve: {
@@ -38,12 +42,12 @@ export default defineConfig({
       'Cross-Origin-Embedder-Policy': 'require-corp',
     },
   },
-  build: {
-    lib: {
-      entry: 'src/ffmpeg-entry.js',
-      name: 'ffmpeg',
-      fileName: 'ffmpeg',
-      formats: ['umd'],
-    },
-  },
+  // build: {
+  //   lib: {
+  //     entry: 'src/ffmpeg-entry.js',
+  //     name: 'ffmpeg',
+  //     fileName: 'ffmpeg',
+  //     formats: ['umd'],
+  //   },
+  // },
 });

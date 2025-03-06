@@ -44,12 +44,12 @@ defineProps(['baseInfo']);
 }
 .header-info-desc {
   span {
-    color: #d8d8d8;
+    color: var(--font-color2);
     margin-right: 8px;
   }
 }
 .description {
-  color: #4f4f4f;
+  color: var(--font-color2);
   font-size: 15px;
   white-space: pre-line;
   letter-spacing: 0;

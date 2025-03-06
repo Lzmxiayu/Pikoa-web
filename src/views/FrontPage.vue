@@ -152,12 +152,12 @@ onMounted(async () => {
   margin-bottom: 60px;
 }
 
-@media screen and(max-width: 1300px) {
+@media screen and (max-width: 1300px) {
   .main-content {
     margin: 10px 10px;
   }
 }
-@media screen and(max-width: 1500px) {
+@media screen and (max-width: 1500px) {
   .rcmd_area_right_item:nth-of-type(n + 6) {
     margin-top: 40px;
   }
@@ -168,7 +168,7 @@ onMounted(async () => {
     padding: 10px 60px;
   }
 }
-@media screen and(min-width: 1501px) {
+@media screen and (min-width: 1501px) {
   .rcmd_area_right_item:nth-of-type(n + 8) {
     margin-top: 40px;
   }
@@ -176,7 +176,7 @@ onMounted(async () => {
     padding: 0 140px;
   }
 }
-@media screen and(min-width: 1920px) {
+@media screen and (min-width: 1920px) {
   .main-content {
     padding: 0 200px;
   }

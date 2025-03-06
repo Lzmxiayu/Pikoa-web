@@ -13,9 +13,6 @@
       >
         <img :alt="item.title" :src="processPic(item.pic)" />
         <p :title="item.title">{{ item.title }}</p>
-
-        <!-- <div>
-        </div> -->
       </div>
     </div>
   </a-spin>
@@ -101,7 +98,7 @@ watch(
   background: rgba(79, 79, 79, 0.1);
 }
 
-@media screen and(max-width: 1920px) {
+@media screen and (max-width: 1920px) {
   .related-item {
     height: 90px;
     img {
@@ -113,7 +110,7 @@ watch(
     }
   }
 }
-@media screen and(max-width: 2560px) {
+@media screen and (max-width: 2560px) {
   .related-item {
     height: 108px;
     img {
