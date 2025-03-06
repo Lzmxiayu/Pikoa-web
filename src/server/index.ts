@@ -76,7 +76,7 @@ export const getFrontRecommendVideos = async (params?: any) =>
 
 export const getViewHistory = async (params: any) =>
   Service({
-    url: '/api//history/view',
+    url: '/api/history/view',
     method: 'GET',
     params,
     config: undefined,
