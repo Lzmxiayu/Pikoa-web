@@ -2,6 +2,8 @@
 
 Pikoa项目的前端部分
 后端为Nodejs实现，本地整理代码中
+<img src="./doc/images/3.png" width="700">
+<img src="./doc/images/2.png" width="700">
 
 ## Project Setup
 

@@ -74,6 +74,10 @@ function onClickMenuItem(key) {
   margin-bottom: 40px;
 }
 
+:deep(.arco-layout) {
+  height: 100vh;
+}
+
 :deep(.arco-menu-item) {
   height: 60px;
   font-size: 16px;
