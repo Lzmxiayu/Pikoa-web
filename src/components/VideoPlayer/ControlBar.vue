@@ -136,9 +136,9 @@ import {
   IconPlus,
 } from '@arco-design/web-vue/es/icon';
 import { throttle, formatTime } from '@/utils/index';
-import { useVideoPlayerStore } from '@/stores/videoplayer';
+import { useVideoPlayerStore } from '@/store/videoplayer';
 import { storeToRefs } from 'pinia';
-import { useVideoInfoStore } from '@/stores/videoInfo';
+import { useVideoInfoStore } from '@/store/videoInfo';
 import { getVideoshot } from '@/server';
 // import { debounce } from '@/utils';
 

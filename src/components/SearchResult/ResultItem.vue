@@ -46,6 +46,7 @@
 </template>
 <script setup>
 import { ref, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 import { IconLiveBroadcast, IconDice } from '@arco-design/web-vue/es/icon';
 import { getVideoView, getPlayList } from '@/server';
 import initialize from '@/components/videoPlayer/mse.js';
@@ -71,17 +72,28 @@ function playdesciption(val) {
   return val > 10000 ? Math.floor(val / 10000) + '万' : val;
 }
 
+const router = useRouter();
+
 function jumpVideo(item) {
-  // videoInfoStore.setBvid(item.bvid)
-  window.open(`${window.location.origin}/video?bvid=${item.bvid}`);
-  // router.push({
-  //   name: 'video',
-  // })
+  const route = router.resolve({
+    path: '/video',
+    query: {
+      bvid: item.bvid,
+    },
+  });
+  window.open(route.href, '_blank');
 }
 
 function jumpSpace(item) {
-  window.open(`${window.location.origin}/space?mid=${item.owner?.mid}`);
+  const route = router.resolve({
+    path: '/space',
+    query: {
+      mid: item.owner.mid,
+    },
+  });
+  window.open(route.href, '_blank');
 }
+
 function getMpdInfo() {
   const { dash, timeStamp } = playConfig.value;
   if (!dash) return;

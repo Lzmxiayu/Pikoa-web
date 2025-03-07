@@ -1,57 +1,42 @@
-import {
-  createRouter,
-  createWebHashHistory,
-  createWebHistory,
-} from 'vue-router';
-import VideoView from '@/views/VideoView.vue';
-import SearchView from '@/views/SearchView.vue';
-import Home from '@/views/Home.vue';
-import HistoryPage from '@/views/HistoryPage.vue';
-import SpaceView from '@/views/SpaceView.vue';
-import LoginView from '@/views/LoginView.vue';
-import CreateView from '@/views/CreateView.vue';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 const router = createRouter({
-  history: createWebHashHistory(), //createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHashHistory(),
   routes: [
     {
       path: '/video',
       name: 'video',
-      component: VideoView,
+      component: () => import('@/views/VideoView.vue'),
     },
     {
       path: '/search',
       name: 'search',
-      component: SearchView,
-      // () => import('@/views/SearchView.vue'),
+      component: () => import('@/views/SearchView.vue'),
     },
     {
       path: '/',
       name: 'home',
-      component: Home,
-      // () => import('@/views/SearchView.vue'),
+      component: () => import('@/views/Home.vue'),
     },
     {
       path: '/create',
       name: 'create',
-      component: CreateView,
+      component: () => import('@/views/CreateView.vue'),
     },
     {
       path: '/history',
       name: 'history',
-      component: HistoryPage,
-      // () => import('@/views/SearchView.vue'),
+      component: () => import('@/views/HistoryPage.vue'),
     },
     {
       path: '/space',
       name: 'space',
-      component: SpaceView,
-      // () => import('@/views/SearchView.vue'),
+      component: () => import('@/views/SpaceView.vue'),
     },
     {
       path: '/login',
       name: 'login',
-      component: LoginView,
+      component: () => import('@/views/LoginView.vue'),
     },
   ],
 });

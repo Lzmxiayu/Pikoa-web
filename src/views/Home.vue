@@ -97,11 +97,10 @@ async function getFrontRecommendVideosFn() {
 //   return (rmcdVideos.value || []).map(item => item.pic);
 // });
 
-function jumpSearch(e: { target: { value: string } }) {
-  // console.log(e.target.value);
-  const keyword = e.target.value;
-  window.open(`${window.location.origin}/search?keyword=${keyword}`);
-}
+// function jumpSearch(e: { target: { value: string } }) {
+//   // console.log(e.target.value);
+//   const keyword = e.target.value;
+// }
 
 onMounted(async () => {
   await getFrontRecommendVideosFn();

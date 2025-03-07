@@ -26,7 +26,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import { rgb888ToRgb, throttle } from '@/utils';
-import { useVideoPlayerStore } from '@/stores/videoplayer';
+import { useVideoPlayerStore } from '@/store/videoplayer';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps({
@@ -305,8 +305,8 @@ onMounted(() => {
   user-select: none;
   pointer-events: none;
   z-index: 20;
-  --textShadow: 1px 0 1px #000000, 0 1px 1px #000000, 0 -1px 1px #000000,
-    -1px 0 1px #000000;
+  --textShadow:
+    1px 0 1px #000000, 0 1px 1px #000000, 0 -1px 1px #000000, -1px 0 1px #000000;
   text-shadow: var(--textShadow);
 }
 .hidden {

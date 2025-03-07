@@ -55,8 +55,8 @@
 import { computed, onMounted, ref, watch, nextTick } from 'vue';
 import FixedList from '@/components/common/FixedList.vue';
 import PlayingGif from '@/components/Icon/PlayingGif.vue';
-import { useVideoInfoStore } from '@/stores/videoInfo';
-import { useVideoPlayerStore } from '@/stores/videoplayer';
+import { useVideoInfoStore } from '@/store/videoInfo';
+import { useVideoPlayerStore } from '@/store/videoplayer';
 
 import { formatTime } from '@/utils';
 

@@ -28,7 +28,6 @@
         @click="jumpVideo(item)"
         v-html="item?.['title']"
       ></h3>
-      <!-- <icon-delete size="24" class="deleteIcon" /> -->
     </div>
     <div class="last_line">
       <span class="author" @click="jumpSpace(item)">{{
@@ -45,7 +44,8 @@
 </template>
 <script setup>
 import { computed, ref } from 'vue';
-import { IconLiveBroadcast, IconDelete } from '@arco-design/web-vue/es/icon';
+import { useRouter } from 'vue-router';
+import { IconLiveBroadcast } from '@arco-design/web-vue/es/icon';
 import { formatTime } from '@/utils';
 
 const props = defineProps(['item']);
@@ -76,15 +76,25 @@ function endLoading() {
   isloading.value = false;
 }
 
+const router = useRouter();
 function jumpVideo(item) {
-  window.open(`${window.location.origin}/video?bvid=${item.history.bvid}`);
-  // router.push({
-  //   name: 'video',
-  // })
+  const route = router.resolve({
+    path: '/video',
+    query: {
+      bvid: item.history.bvid,
+    },
+  });
+  window.open(route.href, '_blank');
 }
 
 function jumpSpace(item) {
-  window.open(`${window.location.origin}/space?mid=${item.author_mid}`);
+  const route = router.resolve({
+    path: '/space',
+    query: {
+      mid: item.author_mid,
+    },
+  });
+  window.open(route.href, '_blank');
 }
 </script>
 

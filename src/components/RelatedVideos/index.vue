@@ -20,7 +20,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { useVideoInfoStore } from '@/stores/videoInfo';
+import { useVideoInfoStore } from '@/store/videoInfo';
 import { storeToRefs } from 'pinia';
 import { getRelatedVideos } from '@/server';
 import { processPic } from '@/utils';

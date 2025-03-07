@@ -23,19 +23,16 @@
             class="collection-container"
           >
             <CollectionList :collection-info="collectionInfo" :bvid="bvid" />
-            <!-- <RelatedVideos></RelatedVideos> -->
           </div>
           <div class="desc-container">
-            <!-- <span>简介：</span> -->
             <VideoIntroduction :base-info="baseInfo" />
-            <!-- <RelatedVideos v-if="true"></RelatedVideos> -->
           </div>
         </div>
         <RelatedVideos v-show="rightAreaKey === '2'"></RelatedVideos>
-        <BarrageList
+        <!-- <BarrageList
           v-show="rightAreaKey === '3'"
           :barrage-info="barrageInfo"
-        ></BarrageList>
+        ></BarrageList> -->
         <Comments
           v-show="rightAreaKey === '4'"
           :base-info="baseInfo"
@@ -56,7 +53,7 @@ import CollectionList from '@/components/CollectionList/index.vue';
 import { getVideoView, getPlayList, getBarrage } from '@/server';
 import { parseUrlParams, handleProtoBuf } from '@/utils';
 import { init, generateWbiParams } from '@/utils/wbi.js';
-import { useVideoInfoStore } from '@/stores/videoInfo';
+import { useVideoInfoStore } from '@/store/videoInfo';
 import { storeToRefs } from 'pinia';
 
 const rightAreaKey = ref('2');

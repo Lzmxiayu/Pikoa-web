@@ -44,8 +44,8 @@
 </template>
 <script setup>
 import { computed, ref } from 'vue';
-import { IconLiveBroadcast, IconDelete } from '@arco-design/web-vue/es/icon';
-import { formatTime } from '@/utils';
+import { useRouter } from 'vue-router';
+// import { IconLiveBroadcast, IconDelete } from '@arco-design/web-vue/es/icon';
 
 const props = defineProps(['item']);
 
@@ -53,17 +53,11 @@ const isloading = ref(true);
 
 const view_time = computed(() => {
   return props.item?.['length'] || '';
-  //   if (!props.item?.['progress'] || !props.item?.['duration'])
-  //     return '00:00/00:00';
-  //   const duration = formatTime(props.item?.['duration'] || 0);
-  //   if (props?.item?.['progress'] === -1) return `${duration}/${duration}`;
-  //   return formatTime(props.item?.['progress'] || 0) + '/' + duration;
 });
 
 const view_at = computed(() => {
   if (!props.item?.['timeObj']) return '';
-  //   const { month, day, hour, minute } = props.item?.['timeObj'] || {};
-  return props.item?.['timeObj']; //`${month}-${day} ${hour}:${minute}`;
+  return props.item?.['timeObj'];
 });
 
 const scrollBarWidth = computed(() => {
@@ -76,11 +70,16 @@ function endLoading() {
   isloading.value = false;
 }
 
+const router = useRouter();
+
 function jumpVideo(item) {
-  window.open(`${window.location.origin}/video?bvid=${item.bvid}`);
-  // router.push({
-  //   name: 'video',
-  // })
+  const route = router.resolve({
+    path: '/video',
+    query: {
+      bvid: item.bvid,
+    },
+  });
+  window.open(route.href, '_blank');
 }
 </script>
 

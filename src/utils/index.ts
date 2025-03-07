@@ -267,6 +267,6 @@ export function changeUrlSearchParam(params: { key: any; value: any }[]) {
   window.history.replaceState(
     {},
     '',
-    `${window.location.pathname}?${searchParams.toString()}`,
+    `${window.location.href.split('?')[0]}?${searchParams.toString()}`,
   );
 }

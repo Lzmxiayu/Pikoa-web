@@ -84,7 +84,7 @@ import { timestampToDate } from '@/utils/index';
 // import { downloadFile } from '@/server/index';
 import eventBus from '@/eventBus';
 import initialize from './mse.js';
-import { useVideoPlayerStore } from '@/stores/videoplayer';
+import { useVideoPlayerStore } from '@/store/videoplayer';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps([

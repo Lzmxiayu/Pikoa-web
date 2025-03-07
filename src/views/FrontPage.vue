@@ -95,10 +95,6 @@ const images = computed(() => {
   return (rmcdVideos.value || []).map(item => item.pic);
 });
 
-function jumpSearch(e) {
-  console.log(e.target.value);
-  window.open(`${window.location.origin}/search?keyword=${e.target.value}`);
-}
 onMounted(async () => {
   await getFrontRecommendVideosFn();
 });

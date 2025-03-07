@@ -6,7 +6,7 @@
       <div class="content">
         <div class="anime-area">
           <div class="title">
-            <h1>MoonBeach</h1>
+            <h1>Pikoa</h1>
             <!-- <h1>Moon</h1>
             <h1>Beach</h1> -->
           </div>

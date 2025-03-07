@@ -33,3 +33,5 @@ src-tauri
 *.tsbuildinfo
 node_modules
 .vite/*
+auto-imports.d.ts
+components.d.ts
